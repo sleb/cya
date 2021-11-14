@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /games/{gameId} {
+      allow read, create: if request.auth != null
+      allow update, delete: if {"id": request.auth.token.sub, "name": request.auth.token.name} in resource.data.players
+    }
+  }
+}
