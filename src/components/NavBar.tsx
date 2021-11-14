@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import logo from "../images/cya.jpg";
 import { User } from "../model/user";
-import { signOutUser } from "../services/auth-service";
 import LogOutButton from "./LogOutButton";
 import MenuButton from "./MenuButton";
 type Props = { user: User };

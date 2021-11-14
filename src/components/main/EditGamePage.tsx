@@ -29,6 +29,8 @@ const EditGamePage = (props: Props) => {
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
 
+  console.log(errors);
+
   const editGame = ({ scores }: Inputs) => {
     console.log("edit game");
   };
