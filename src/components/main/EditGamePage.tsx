@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { Game } from "../../model/game";
 import { Score } from "../../model/score";
-import { getGame } from "../../services/game-service";
+import { addRoundToGame, getGame } from "../../services/game-service";
 import Button from "../Button";
 
 type Inputs = { scores: Score[][] };
@@ -43,34 +43,47 @@ const EditGamePage = (props: Props) => {
     return <div>Game not found</div>;
   }
 
-  return (
-    <form onSubmit={handleSubmit(editGame)} className="mt-8">
-      <label className="block text-gray-700 text-sm font-bold mb-2">
-        Update scores
-      </label>
-      <Controller
-        name="scores"
-        defaultValue={game.rounds}
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <div>
-            {value.map((round, index) => (
-              <div key={index}>{JSON.stringify(round)}</div>
-            ))}
-            {game.players.map((player, index) => (
-              <label
-                key={index}
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                {player.name}
-              </label>
-            ))}
-          </div>
-        )}
-      />
+  const addRound = () => {
+    const scores: Score[] = game.players.map((player) => ({
+      score: 0,
+      player,
+    }));
+    addRoundToGame(game.id, { num: game.rounds.length + 1, scores }).catch(
+      console.error
+    );
+  };
 
-      <Button title="Update" type="submit" />
-    </form>
+  return (
+    <div>
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-green-900">Update Game</h1>
+        </div>
+      </header>
+      <form onSubmit={handleSubmit(editGame)} className="mt-8">
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Rounds ({game.rounds.length})
+        </label>
+        <div className="px-4 py-6">
+          {game.rounds.forEach((scores, round) => (
+            <div>
+              <label key={round} className="block text-gray-700 text-sm mb-2">
+                Round {round}
+              </label>
+              <input type="number" />
+            </div>
+          ))}
+          <Button type="button" title="Add round" onClick={addRound} />
+        </div>
+        <Controller
+          name="scores"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => <div />}
+        />
+
+        <Button title="Update" type="submit" />
+      </form>
+    </div>
   );
 };
 

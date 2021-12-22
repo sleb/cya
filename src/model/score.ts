@@ -1,4 +1,6 @@
+import { User } from "./user";
+
 export interface Score {
-  player: string;
+  player: User;
   score: number;
 }
