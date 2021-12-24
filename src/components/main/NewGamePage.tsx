@@ -11,7 +11,7 @@ interface Props {}
 
 type Inputs = {
   name: string;
-  cards: 4 | 5 | 6;
+  cards: number;
 };
 
 const NewGamePage = (props: Props) => {
@@ -61,9 +61,10 @@ const NewGamePage = (props: Props) => {
       <Controller
         name="cards"
         control={control}
+        defaultValue={4}
         rules={{
           validate: (value) => {
-            return (value >= 4 && value <= 6) || "Please use 4, 5, or 6";
+            return (+value >= 4 && +value <= 6) || "Please use 4, 5, or 6";
           },
         }}
         render={({ field: { onChange, onBlur, value } }) => (
@@ -72,7 +73,7 @@ const NewGamePage = (props: Props) => {
             error={errors.cards?.message}
             onChange={onChange}
             onBlur={onBlur}
-            value={value || 4}
+            value={value}
             min={4}
             max={6}
           />
