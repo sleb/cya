@@ -6,6 +6,7 @@ import { currentUser } from "../../services/auth-service";
 import { getGame } from "../../services/game-service";
 import { createJoinRequest } from "../../services/join-request-service";
 import Button from "../Button";
+import Header from "../Header";
 import TextInput from "../TextInput";
 
 interface Props {}
@@ -53,14 +54,8 @@ const JoinGamePage = (props: Props) => {
 
   return (
     <div>
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-green-900">
-            Join Game - "{game.name}"
-          </h1>
-        </div>
-      </header>
-      <form onSubmit={handleSubmit(joinGame)} className="mt-8">
+      <Header title={`Request to Join "${game.name}"`} />
+      <form onSubmit={handleSubmit(joinGame)}>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Message
         </label>

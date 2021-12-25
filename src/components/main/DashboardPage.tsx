@@ -5,6 +5,7 @@ import { onGamesSnapshot } from "../../services/game-service";
 import { Game } from "../../model/game";
 import GameListItem from "../GameListItem";
 import { Link } from "react-router-dom";
+import Header from "../Header";
 
 interface Props {}
 
@@ -32,13 +33,16 @@ const DashboardPage = (props: Props) => {
   }, []);
 
   return (
-    <div className="flex flex-col">
-      {games.map((game, i) => (
-        <GameListItem key={i} game={game} />
-      ))}
+    <div>
+      <Header title="Dashboard" />
+      <div className="flex flex-col">
+        {games.map((game, i) => (
+          <GameListItem key={i} game={game} />
+        ))}
 
-      <button onClick={logOut}>Dashboard</button>
-      <Link to="/game/new">New Game</Link>
+        <button onClick={logOut}>Dashboard</button>
+        <Link to="/game/new">New Game</Link>
+      </div>
     </div>
   );
 };
