@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import { Game } from "../../model/game";
 import { currentUser } from "../../services/auth-service";
 import { getGame } from "../../services/game-service";
 import { createJoinRequest } from "../../services/join-request-service";
+import Button from "../Button";
+import TextInput from "../TextInput";
 
 interface Props {}
 
@@ -20,6 +23,12 @@ const JoinGamePage = (props: Props) => {
     });
   }, [id]);
 
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<Inputs>({ mode: "onBlur" });
+
   if (!loaded) {
     return <div>Loading...</div>;
   }
@@ -28,18 +37,50 @@ const JoinGamePage = (props: Props) => {
     return <div>Game not found</div>;
   }
 
-  return (
-    <button
-      onClick={() =>
-        currentUser().then((user) => {
-          if (user) {
-            createJoinRequest(game.id, user.id);
-          }
-        })
+  type Inputs = {
+    message: string;
+  };
+
+  const joinGame = (inputs: Inputs) => {
+    currentUser().then((user) => {
+      if (user) {
+        createJoinRequest(game.id, user.id, inputs.message).catch(
+          console.error
+        );
       }
-    >
-      Join Game?
-    </button>
+    });
+  };
+
+  return (
+    <div>
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-green-900">
+            Join Game - "{game.name}"
+          </h1>
+        </div>
+      </header>
+      <form onSubmit={handleSubmit(joinGame)} className="mt-8">
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Message
+        </label>
+        <Controller
+          name="message"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Message (optional)"
+              error={errors.message?.message}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+            />
+          )}
+        />
+
+        <Button type="submit" title="Join Game" />
+      </form>
+    </div>
   );
 };
 

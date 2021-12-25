@@ -26,7 +26,7 @@ export const createJoinRequest = async (
     await addDoc(collectionRef, {
       gameId,
       userId,
-      message,
+      message: message || "",
     });
   } catch (err) {
     throw new Error(`Failed to create new join request ${err}`);
