@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Game } from "../../model/game";
 import { currentUser } from "../../services/auth-service";
-import { addUserToGame, getGame } from "../../services/game-service";
+import { getGame } from "../../services/game-service";
+import { createJoinRequest } from "../../services/join-request-service";
 
 interface Props {}
 
@@ -32,7 +33,7 @@ const JoinGamePage = (props: Props) => {
       onClick={() =>
         currentUser().then((user) => {
           if (user) {
-            addUserToGame(game.id, user);
+            createJoinRequest(game.id, user.id);
           }
         })
       }
