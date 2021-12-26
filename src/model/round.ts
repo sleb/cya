@@ -1,6 +1,6 @@
-import { Score } from "./score";
+import { PlayerScore } from "./player-score";
 
 export interface Round {
   num: number;
-  scores: Score[];
+  playerScores: PlayerScore[];
 }

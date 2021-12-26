@@ -17,11 +17,11 @@ export const summarizeScoresByPlayer = (
   rounds: Round[]
 ): Map<string, number> => {
   return rounds
-    .flatMap((round) => round.scores)
-    .reduce((acc, score) => {
+    .flatMap((round) => round.playerScores)
+    .reduce((acc, playerScore) => {
       acc.set(
-        score.player.name,
-        (acc.get(score.player.name) || 0) + score.score
+        playerScore.player.name,
+        (acc.get(playerScore.player.name) || 0) + playerScore.score
       );
       return acc;
     }, new Map<string, number>());

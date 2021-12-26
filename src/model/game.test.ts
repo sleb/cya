@@ -5,14 +5,14 @@ test("summarize socres", () => {
   const rounds: Round[] = [
     {
       num: 1,
-      scores: [
+      playerScores: [
         { player: { name: "bob", id: "1" }, score: 10 },
         { player: { name: "bill", id: "2" }, score: 50 },
       ],
     },
     {
       num: 2,
-      scores: [
+      playerScores: [
         { player: { name: "bob", id: "1" }, score: 90 },
         { player: { name: "bill", id: "2" }, score: 150 },
       ],
