@@ -1,12 +1,20 @@
 import React from "react";
 
-type Props = { type: "button" | "submit"; title: string; onClick?: () => void };
+type Props = {
+  type: "button" | "submit";
+  title: string;
+  onClick?: () => void;
+  invert?: boolean;
+};
 
-const Button = ({ type, title, onClick }: Props) => {
+const normal = "bg-green-700 text-yellow-300";
+const inverted = "border-green-700 border text-green-700";
+
+const Button = ({ type, title, onClick, invert = false }: Props) => {
   return (
     <button
       type={type}
-      className="bg-green-700 text-yellow-300 px-2 py-1 w-full rounded-md"
+      className={`${invert ? inverted : normal} px-2 py-1 w-full rounded-md`}
       onClick={onClick}
     >
       {title}

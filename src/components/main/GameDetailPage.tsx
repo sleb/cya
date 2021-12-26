@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Game } from "../../model/game";
 import { JoinRequest } from "../../model/join-request";
-import { formatScore, PlayerScore } from "../../model/player-score";
+import { PlayerScore } from "../../model/player-score";
 import { addRoundToGame, getGame } from "../../services/game-service";
 import { getJoinRequests } from "../../services/join-request-service";
 import Button from "../Button";
 import Header from "../Header";
+import JoinRequestListItem from "../JoinRequestListItem";
 
 type Inputs = { scores: PlayerScore[][] };
 
@@ -106,7 +107,17 @@ const GameDetailPage = (props: Props) => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Join Requests ({joinRequests?.length || 0})
         </label>
+        <div className="px-4 py-6">
+          {joinRequests?.map((joinRequest) => (
+            <ul>
+              <li>
+                <JoinRequestListItem joinRequest={joinRequest} />
+              </li>
+            </ul>
+          ))}
+        </div>
       </div>
+      <Link to="/">Back to home</Link>
     </div>
   );
 };
