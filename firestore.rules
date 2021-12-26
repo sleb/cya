@@ -7,7 +7,7 @@ service cloud.firestore {
     }
 
     match /join-requests/{requestId} {
-      allow read, create: if request.auth != null
+      allow read, create, delete: if request.auth != null
     }
   }
 }
