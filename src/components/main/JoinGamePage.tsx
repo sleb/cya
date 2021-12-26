@@ -45,9 +45,7 @@ const JoinGamePage = (props: Props) => {
   const joinGame = (inputs: Inputs) => {
     currentUser().then((user) => {
       if (user) {
-        createJoinRequest(game.id, user.id, inputs.message).catch(
-          console.error
-        );
+        createJoinRequest(game.id, user, inputs.message).catch(console.error);
       }
     });
   };

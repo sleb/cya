@@ -1,6 +1,8 @@
+import { User } from "./user";
+
 export interface JoinRequestData {
   gameId: string;
-  userId: string;
+  user: User;
   message?: string;
 }
 
