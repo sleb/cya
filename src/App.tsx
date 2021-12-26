@@ -13,7 +13,7 @@ import DashboardPage from "./components/main/DashboardPage";
 import NavBar from "./components/NavBar";
 import { User } from "./model/user";
 import NewGamePage from "./components/main/NewGamePage";
-import EditGamePage from "./components/main/EditGamePage";
+import GameDetailPage from "./components/main/GameDetailPage";
 import JoinGamePage from "./components/main/JoinGamePage";
 
 const App = () => {
@@ -54,7 +54,7 @@ const App = () => {
               <Routes>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/game/new" element={<NewGamePage />} />
-                <Route path="/game/:id/edit" element={<EditGamePage />} />
+                <Route path="/game/:id/edit" element={<GameDetailPage />} />
                 <Route path="/game/:id/join" element={<JoinGamePage />} />
                 <Route
                   path="*"

@@ -2,26 +2,37 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { Game } from "../../model/game";
-import { Score } from "../../model/score";
+import { JoinRequest } from "../../model/join-request";
+import { formatScore, PlayerScore } from "../../model/player-score";
 import { addRoundToGame, getGame } from "../../services/game-service";
+import { getJoinRequests } from "../../services/join-request-service";
 import Button from "../Button";
 import Header from "../Header";
 
-type Inputs = { scores: Score[][] };
+type Inputs = { scores: PlayerScore[][] };
 
 interface Props {}
 
-const EditGamePage = (props: Props) => {
+const GameDetailPage = (props: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [game, setGame] = useState<null | Game>(null);
+  const [joinRequests, setJoinRequests] = useState<null | JoinRequest[]>(null);
 
   const { id } = useParams();
 
   useEffect(() => {
-    getGame(id!).then((game) => {
-      setGame(game);
-      setLoaded(true);
-    });
+    if (id) {
+      Promise.all([
+        getGame(id).then((game) => {
+          setGame(game);
+        }),
+        getJoinRequests(id).then((joinRequests) => {
+          setJoinRequests(joinRequests);
+        }),
+      ]).then(() => {
+        setLoaded(true);
+      });
+    }
   }, [id]);
 
   const {
@@ -45,29 +56,40 @@ const EditGamePage = (props: Props) => {
   }
 
   const addRound = () => {
-    const scores: Score[] = game.players.map((player) => ({
+    const playerScores: PlayerScore[] = game.players.map((player) => ({
       score: 0,
       player,
     }));
-    addRoundToGame(game.id, { num: game.rounds.length + 1, scores }).catch(
-      console.error
-    );
+    addRoundToGame(game.id, {
+      num: game.rounds.length + 1,
+      playerScores,
+    }).catch(console.error);
   };
+
+  console.log(JSON.stringify(joinRequests));
 
   return (
     <div>
-      <Header title="Edit Game" />
+      <Header title="Game Details" />
       <form onSubmit={handleSubmit(editGame)}>
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Rounds ({game.rounds.length})
         </label>
         <div className="px-4 py-6">
-          {game.rounds.forEach((scores, round) => (
+          {game.rounds.map((round) => (
             <div>
-              <label key={round} className="block text-gray-700 text-sm mb-2">
-                Round {round}
+              <label
+                key={round.num}
+                className="block text-gray-700 text-sm mb-2"
+              >
+                Round {round.num}
               </label>
-              <input type="number" />
+              {round.playerScores.map((playerScore) => (
+                <div>
+                  {`${playerScore.player.name}: `}
+                  <input type="number" value={playerScore.score} />
+                </div>
+              ))}
             </div>
           ))}
           <Button type="button" title="Add round" onClick={addRound} />
@@ -80,8 +102,13 @@ const EditGamePage = (props: Props) => {
 
         <Button title="Update" type="submit" />
       </form>
+      <div>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Join Requests ({joinRequests?.length || 0})
+        </label>
+      </div>
     </div>
   );
 };
 
-export default EditGamePage;
+export default GameDetailPage;
