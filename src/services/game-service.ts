@@ -106,6 +106,25 @@ export const getGame = async (id: string): Promise<Game> => {
   }
 };
 
+export const onGameSnapshot = (
+  game: Game,
+  next: (game: Game) => void,
+  error: (err: Error) => void
+): (() => void) => {
+  const db = getFirestore(app);
+  const gameDoc = doc(db, "games", game.id).withConverter(converter);
+
+  return onSnapshot(
+    gameDoc,
+    (snap) => {
+      if (snap.exists()) {
+        next({ id: snap.id, ...snap.data() });
+      }
+    },
+    error
+  );
+};
+
 export const onGamesSnapshot = (
   user: User,
   next: (games: Game[]) => void,

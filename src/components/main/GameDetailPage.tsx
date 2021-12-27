@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
-import { Game } from "../../model/game";
+import { Game, summarizeScoresByPlayer } from "../../model/game";
 import { JoinRequest } from "../../model/join-request";
 import { PlayerScore } from "../../model/player-score";
-import { addRoundToGame, getGame } from "../../services/game-service";
+import {
+  addRoundToGame,
+  getGame,
+  onGameSnapshot,
+} from "../../services/game-service";
 import { onJoinRequestSnapshot } from "../../services/join-request-service";
 import Button from "../Button";
 import Header from "../Header";
@@ -23,16 +27,22 @@ const GameDetailPage = (props: Props) => {
 
   useEffect(() => {
     let unsubscribeJoinRequestSnapshot = () => {};
+    let unsubscribeGameShapshot = () => {};
 
     if (id) {
       getGame(id)
         .then((game) => {
           setGame(game);
+
           unsubscribeJoinRequestSnapshot = onJoinRequestSnapshot(
             game,
-            (joinRequests) => {
-              setJoinRequests(joinRequests);
-            },
+            (joinRequests) => setJoinRequests(joinRequests),
+            console.error
+          );
+
+          unsubscribeGameShapshot = onGameSnapshot(
+            game,
+            (game) => setGame(game),
             console.error
           );
         })
@@ -44,6 +54,7 @@ const GameDetailPage = (props: Props) => {
 
     return () => {
       unsubscribeJoinRequestSnapshot();
+      unsubscribeGameShapshot();
     };
   }, [id]);
 
@@ -78,14 +89,23 @@ const GameDetailPage = (props: Props) => {
     }).catch(console.error);
   };
 
+  const playerScores = summarizeScoresByPlayer(game.rounds);
   return (
     <div>
       <Header title="Game Details" />
       <form onSubmit={handleSubmit(editGame)}>
         <label className="block text-gray-700 text-sm font-bold mb-2">
+          Players ({game.players.length})
+        </label>
+        <div className="px-4">
+          {game.players.map((player) => (
+            <p>{`${player.name}: ${playerScores.get(player.name) || 0}`}</p>
+          ))}
+        </div>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
           Rounds ({game.rounds.length})
         </label>
-        <div className="px-4 py-6">
+        <div className="px-4">
           {game.rounds.map((round, gameIndex) => (
             <div key={gameIndex}>
               <label
@@ -104,13 +124,6 @@ const GameDetailPage = (props: Props) => {
           ))}
           <Button type="button" title="Add round" onClick={addRound} />
         </div>
-        <Controller
-          name="scores"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => <div />}
-        />
-
-        <Button title="Update" type="submit" />
       </form>
       <div>
         <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -136,9 +149,6 @@ const GameDetailPage = (props: Props) => {
           with your frields!!
         </span>
       </div>
-      <Link to="/" className="text-green-700 hover:underline">
-        Back to home
-      </Link>
     </div>
   );
 };
