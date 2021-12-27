@@ -7,7 +7,7 @@ type Props = {
   invert?: boolean;
 };
 
-const normal = "bg-green-700 text-yellow-300";
+const normal = "bg-green-700 text-white";
 const inverted = "border-green-700 border text-green-700";
 
 const Button = ({ type, title, onClick, invert = false }: Props) => {

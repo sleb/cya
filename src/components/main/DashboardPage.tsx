@@ -4,14 +4,11 @@ import { onGamesSnapshot } from "../../services/game-service";
 
 import { Game } from "../../model/game";
 import GameListItem from "../GameListItem";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header";
+import Button from "../Button";
 
 interface Props {}
-
-const logOut = () => {
-  signOutUser().catch(console.error);
-};
 
 const DashboardPage = (props: Props) => {
   const [games, setGames] = useState([] as Game[]);
@@ -32,6 +29,8 @@ const DashboardPage = (props: Props) => {
     return unsubscribe;
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <div>
       <Header title="Dashboard" />
@@ -39,9 +38,11 @@ const DashboardPage = (props: Props) => {
         {games.map((game, i) => (
           <GameListItem key={i} game={game} />
         ))}
-
-        <button onClick={logOut}>Dashboard</button>
-        <Link to="/game/new">New Game</Link>
+        <Button
+          title="New Game"
+          type="button"
+          onClick={() => navigate("/game/new")}
+        />
       </div>
     </div>
   );

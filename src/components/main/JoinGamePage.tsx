@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Game } from "../../model/game";
 import { currentUser } from "../../services/auth-service";
 import { getGame } from "../../services/game-service";
@@ -16,6 +16,7 @@ const JoinGamePage = (props: Props) => {
   const [game, setGame] = useState<null | Game>(null);
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getGame(id!).then((game) => {
@@ -45,7 +46,9 @@ const JoinGamePage = (props: Props) => {
   const joinGame = (inputs: Inputs) => {
     currentUser().then((user) => {
       if (user) {
-        createJoinRequest(game.id, user, inputs.message).catch(console.error);
+        createJoinRequest(game.id, user, inputs.message)
+          .then(() => navigate("/dashboard"))
+          .catch(console.error);
       }
     });
   };
