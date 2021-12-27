@@ -14,7 +14,6 @@ import {
 
 import { app } from "../firebase";
 import { Game, GameData } from "../model/game";
-import { PlayerScore } from "../model/player-score";
 import { Round } from "../model/round";
 import { User } from "../model/user";
 
