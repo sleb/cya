@@ -21,7 +21,7 @@ const PlayersDetail = ({ game }: Props) => {
   }, [game]);
 
   return (
-    <div className="text-sm text-gray-700 border border-green-800 p-2 rounded-md mb-2">
+    <div className="text-sm bg-white shadow p-2 rounded-md mb-2">
       <label className="block text-gray-700 text-sm font-bold">
         Players ({game.players.length})
       </label>

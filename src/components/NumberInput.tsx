@@ -5,8 +5,8 @@ type Props = {
   value: number;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur: () => void;
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
   error?: string;
 };
 

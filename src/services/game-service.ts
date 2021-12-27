@@ -14,6 +14,7 @@ import {
 
 import { app } from "../firebase";
 import { Game, GameData } from "../model/game";
+import { PlayerScore } from "../model/player-score";
 import { Round } from "../model/round";
 import { User } from "../model/user";
 
@@ -68,6 +69,23 @@ export const addUserToGame = async (
     }
   } catch (err) {
     throw new Error(`Failed to add user to game ${err}`);
+  }
+};
+
+export const updateRounds = async (
+  gameId: string,
+  rounds: Round[]
+): Promise<void> => {
+  const db = getFirestore(app);
+  const gameDoc = doc(db, "games", gameId).withConverter(converter);
+
+  try {
+    const gameData = await getDoc(gameDoc);
+    if (gameData.exists()) {
+      updateDoc(gameDoc, { rounds });
+    }
+  } catch (err) {
+    throw new Error(`Failed to update scores ${err}`);
   }
 };
 
