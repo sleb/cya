@@ -36,7 +36,7 @@ const RoundsDetail = ({ game }: Props) => {
   const updateScores = ({ scores }: Inputs) => {
     const rounds = game.rounds.map((round) => {
       const playerScores = round.playerScores.map((playerScore) => {
-        const score = scores[playerScore.player.name][round.num];
+        const score = +scores[playerScore.player.name][round.num];
         return { ...playerScore, score };
       });
       return { ...round, playerScores };
