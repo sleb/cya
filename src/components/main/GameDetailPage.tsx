@@ -5,7 +5,7 @@ import { Game } from "../../model/game";
 import { JoinRequest } from "../../model/join-request";
 import { PlayerScore } from "../../model/player-score";
 import { addRoundToGame, getGame } from "../../services/game-service";
-import { getJoinRequests } from "../../services/join-request-service";
+import { onJoinRequestSnapshot } from "../../services/join-request-service";
 import Button from "../Button";
 import Header from "../Header";
 import JoinRequestListItem from "../JoinRequestListItem";
@@ -22,18 +22,29 @@ const GameDetailPage = (props: Props) => {
   const { id } = useParams();
 
   useEffect(() => {
+    let unsubscribeJoinRequestSnapshot = () => {};
+
     if (id) {
-      Promise.all([
-        getGame(id).then((game) => {
+      getGame(id)
+        .then((game) => {
           setGame(game);
-        }),
-        getJoinRequests(id).then((joinRequests) => {
-          setJoinRequests(joinRequests);
-        }),
-      ]).then(() => {
-        setLoaded(true);
-      });
+          unsubscribeJoinRequestSnapshot = onJoinRequestSnapshot(
+            game,
+            (joinRequests) => {
+              setJoinRequests(joinRequests);
+            },
+            console.error
+          );
+        })
+        .then(() => {
+          setLoaded(true);
+        })
+        .catch(console.error);
     }
+
+    return () => {
+      unsubscribeJoinRequestSnapshot();
+    };
   }, [id]);
 
   const {
@@ -67,8 +78,6 @@ const GameDetailPage = (props: Props) => {
     }).catch(console.error);
   };
 
-  console.log(JSON.stringify(joinRequests));
-
   return (
     <div>
       <Header title="Game Details" />
@@ -77,18 +86,18 @@ const GameDetailPage = (props: Props) => {
           Rounds ({game.rounds.length})
         </label>
         <div className="px-4 py-6">
-          {game.rounds.map((round) => (
-            <div>
+          {game.rounds.map((round, gameIndex) => (
+            <div key={gameIndex}>
               <label
                 key={round.num}
                 className="block text-gray-700 text-sm mb-2"
               >
                 Round {round.num}
               </label>
-              {round.playerScores.map((playerScore) => (
-                <div>
+              {round.playerScores.map((playerScore, playerScoreIndex) => (
+                <div key={playerScoreIndex}>
                   {`${playerScore.player.name}: `}
-                  <input type="number" value={playerScore.score} />
+                  <input type="number" defaultValue={playerScore.score} />
                 </div>
               ))}
             </div>
@@ -108,16 +117,28 @@ const GameDetailPage = (props: Props) => {
           Join Requests ({joinRequests?.length || 0})
         </label>
         <div className="px-4 py-6">
-          {joinRequests?.map((joinRequest) => (
-            <ul>
-              <li>
+          <ul>
+            {joinRequests?.map((joinRequest, index) => (
+              <li key={index}>
                 <JoinRequestListItem joinRequest={joinRequest} />
               </li>
-            </ul>
-          ))}
+            ))}
+          </ul>
         </div>
+        <span className="text-gray-700">
+          Share the
+          <Link
+            to={`/game/${game.id}/join`}
+            className="font-bold text-green-700 hover:underline"
+          >
+            {" game link "}
+          </Link>
+          with your frields!!
+        </span>
       </div>
-      <Link to="/">Back to home</Link>
+      <Link to="/" className="text-green-700 hover:underline">
+        Back to home
+      </Link>
     </div>
   );
 };
