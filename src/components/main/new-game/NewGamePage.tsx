@@ -1,12 +1,12 @@
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { currentUser } from "../../services/auth-service";
-import { createGame } from "../../services/game-service";
-import Button from "../Button";
+import { currentUser } from "../../../services/auth-service";
+import { createGame } from "../../../services/game-service";
+import Button from "../../Button";
 import Header from "../Header";
-import NumberInput from "../NumberInput";
-import TextInput from "../TextInput";
+import NumberInput from "../../NumberInput";
+import TextInput from "../../TextInput";
 
 interface Props {}
 

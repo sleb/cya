@@ -1,8 +1,8 @@
 import React from "react";
-import { JoinRequest } from "../model/join-request";
-import { addUserToGame } from "../services/game-service";
-import { deleteJoinRequest } from "../services/join-request-service";
-import Button from "./Button";
+import { JoinRequest } from "../../../model/join-request";
+import { addUserToGame } from "../../../services/game-service";
+import { deleteJoinRequest } from "../../../services/join-request-service";
+import Button from "../../Button";
 
 export type Props = {
   joinRequest: JoinRequest;

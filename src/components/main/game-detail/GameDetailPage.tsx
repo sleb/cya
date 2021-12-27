@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
-import { Game, summarizeScoresByPlayer } from "../../model/game";
-import { JoinRequest } from "../../model/join-request";
-import { PlayerScore } from "../../model/player-score";
+import { Game, summarizeScoresByPlayer } from "../../../model/game";
+import { JoinRequest } from "../../../model/join-request";
+import { PlayerScore } from "../../../model/player-score";
 import {
   addRoundToGame,
   getGame,
   onGameSnapshot,
-} from "../../services/game-service";
-import { onJoinRequestSnapshot } from "../../services/join-request-service";
-import Button from "../Button";
+} from "../../../services/game-service";
+import { onJoinRequestSnapshot } from "../../../services/join-request-service";
+import Button from "../../Button";
 import Header from "../Header";
-import JoinRequestListItem from "../JoinRequestListItem";
+import JoinRequestListItem from "./JoinRequestListItem";
 
 type Inputs = { scores: PlayerScore[][] };
 

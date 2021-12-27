@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Game } from "../model/game";
+import { Game } from "../../../model/game";
 import ScoreSummary from "./ScoreSummary";
 
 type Props = {

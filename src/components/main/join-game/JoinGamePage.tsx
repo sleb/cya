@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
-import { Game } from "../../model/game";
-import { currentUser } from "../../services/auth-service";
-import { getGame } from "../../services/game-service";
-import { createJoinRequest } from "../../services/join-request-service";
-import Button from "../Button";
+import { Game } from "../../../model/game";
+import { currentUser } from "../../../services/auth-service";
+import { getGame } from "../../../services/game-service";
+import { createJoinRequest } from "../../../services/join-request-service";
+import Button from "../../Button";
 import Header from "../Header";
-import TextInput from "../TextInput";
+import TextInput from "../../TextInput";
 
 interface Props {}
 

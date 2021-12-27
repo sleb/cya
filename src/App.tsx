@@ -9,12 +9,12 @@ import {
 import RegisterPage from "./components/auth/RegisterPage";
 import { onAuthChange } from "./services/auth-service";
 import LoginPage from "./components/auth/LoginPage";
-import DashboardPage from "./components/main/DashboardPage";
-import NavBar from "./components/NavBar";
+import DashboardPage from "./components/main/dashboard/DashboardPage";
+import NavBar from "./components/main/NavBar";
 import { User } from "./model/user";
-import NewGamePage from "./components/main/NewGamePage";
-import GameDetailPage from "./components/main/GameDetailPage";
-import JoinGamePage from "./components/main/JoinGamePage";
+import NewGamePage from "./components/main/new-game/NewGamePage";
+import GameDetailPage from "./components/main/game-detail/GameDetailPage";
+import JoinGamePage from "./components/main/join-game/JoinGamePage";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);

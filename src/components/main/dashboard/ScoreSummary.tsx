@@ -1,6 +1,6 @@
 import React from "react";
-import { Game, summarizeScoresByPlayer } from "../model/game";
-import { formatScore } from "../model/player-score";
+import { Game, summarizeScoresByPlayer } from "../../../model/game";
+import { formatScore } from "../../../model/player-score";
 
 interface Props {
   game: Game;

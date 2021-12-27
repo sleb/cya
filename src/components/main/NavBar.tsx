@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../images/cya.jpg";
-import { User } from "../model/user";
-import LogOutButton from "./LogOutButton";
-import MenuButton from "./MenuButton";
+import logo from "../../images/cya.jpg";
+import { User } from "../../model/user";
+import LogOutButton from "../LogOutButton";
+import MenuButton from "../MenuButton";
 type Props = { user: User };
 
 const NavBar = ({ user }: Props) => {

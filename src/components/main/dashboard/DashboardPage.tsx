@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { currentUser, signOutUser } from "../../services/auth-service";
-import { onGamesSnapshot } from "../../services/game-service";
+import { currentUser } from "../../../services/auth-service";
+import { onGamesSnapshot } from "../../../services/game-service";
 
-import { Game } from "../../model/game";
-import GameListItem from "../GameListItem";
+import { Game } from "../../../model/game";
+import GameListItem from "./GameListItem";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
-import Button from "../Button";
+import Button from "../../Button";
 
 interface Props {}
 
