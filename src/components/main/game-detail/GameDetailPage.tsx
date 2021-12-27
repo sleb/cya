@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Link, useParams } from "react-router-dom";
-import { Game, summarizeScoresByPlayer } from "../../../model/game";
-import { JoinRequest } from "../../../model/join-request";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { Game } from "../../../model/game";
 import { PlayerScore } from "../../../model/player-score";
 import {
   addRoundToGame,
   getGame,
   onGameSnapshot,
 } from "../../../services/game-service";
-import { onJoinRequestSnapshot } from "../../../services/join-request-service";
 import Button from "../../Button";
 import Header from "../Header";
-import JoinRequestListItem from "./JoinRequestListItem";
+import PlayersDetail from "./PlayersDetail";
 
 type Inputs = { scores: PlayerScore[][] };
 
@@ -21,7 +19,6 @@ interface Props {}
 const GameDetailPage = (props: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [game, setGame] = useState<null | Game>(null);
-  const [joinRequests, setJoinRequests] = useState<null | JoinRequest[]>(null);
 
   const { id } = useParams();
 
@@ -33,12 +30,6 @@ const GameDetailPage = (props: Props) => {
       getGame(id)
         .then((game) => {
           setGame(game);
-
-          unsubscribeJoinRequestSnapshot = onJoinRequestSnapshot(
-            game,
-            (joinRequests) => setJoinRequests(joinRequests),
-            console.error
-          );
 
           unsubscribeGameShapshot = onGameSnapshot(
             game,
@@ -89,19 +80,11 @@ const GameDetailPage = (props: Props) => {
     }).catch(console.error);
   };
 
-  const playerScores = summarizeScoresByPlayer(game.rounds);
   return (
     <div>
       <Header title="Game Details" />
       <form onSubmit={handleSubmit(editGame)}>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Players ({game.players.length})
-        </label>
-        <div className="px-4">
-          {game.players.map((player) => (
-            <p>{`${player.name}: ${playerScores.get(player.name) || 0}`}</p>
-          ))}
-        </div>
+        <PlayersDetail game={game} />
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Rounds ({game.rounds.length})
         </label>
@@ -125,30 +108,6 @@ const GameDetailPage = (props: Props) => {
           <Button type="button" title="Add round" onClick={addRound} />
         </div>
       </form>
-      <div>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Join Requests ({joinRequests?.length || 0})
-        </label>
-        <div className="px-4 py-6">
-          <ul>
-            {joinRequests?.map((joinRequest, index) => (
-              <li key={index}>
-                <JoinRequestListItem joinRequest={joinRequest} />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <span className="text-gray-700">
-          Share the
-          <Link
-            to={`/game/${game.id}/join`}
-            className="font-bold text-green-700 hover:underline"
-          >
-            {" game link "}
-          </Link>
-          with your frields!!
-        </span>
-      </div>
     </div>
   );
 };

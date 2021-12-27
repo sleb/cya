@@ -18,7 +18,7 @@ const acceptJoinRequest = (joinRequest: JoinRequest) => {
 
 const JoinRequestListItem = ({ joinRequest }: Props) => {
   return (
-    <div className="flex justify-between border rounded-md border-green-800 p-2 mb-2">
+    <div className="flex justify-between border-b border-green-800 p-2 mb-2">
       <div>
         {joinRequest.user.name}
         {joinRequest.message && `: "${joinRequest.message}"`}
