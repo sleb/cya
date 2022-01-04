@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Game } from "../../../model/game";
+import { Game, roundsToFormData } from "../../../model/game";
 import { PlayerScore } from "../../../model/player-score";
 import { addRoundToGame, updateRounds } from "../../../services/game-service";
 import Button from "../../Button";
@@ -11,7 +11,7 @@ export type Props = {
 };
 
 type Inputs = {
-  scores: { [playerId: string]: number[] };
+  scores: Record<string, number[]>;
 };
 
 const RoundsDetail = ({ game }: Props) => {
@@ -36,7 +36,7 @@ const RoundsDetail = ({ game }: Props) => {
   const updateScores = ({ scores }: Inputs) => {
     const rounds = game.rounds.map((round) => {
       const playerScores = round.playerScores.map((playerScore) => {
-        const score = +scores[playerScore.player.name][round.num];
+        const score = +scores[playerScore.player.name][round.num - 1];
         return { ...playerScore, score };
       });
       return { ...round, playerScores };
@@ -44,6 +44,10 @@ const RoundsDetail = ({ game }: Props) => {
 
     updateRounds(game.id, rounds).catch(console.error);
   };
+
+  useEffect(() => {
+    reset(roundsToFormData(game.rounds));
+  }, [game, reset]);
 
   return (
     <div className="bg-white shadow text-sm rounded-md p-2">
@@ -66,13 +70,14 @@ const RoundsDetail = ({ game }: Props) => {
                     {`${playerScore.player.name}: `}
                     <Controller
                       control={control}
-                      defaultValue={playerScore.score}
                       rules={{
                         required: { value: true, message: "Score is required" },
                         validate: (value) =>
                           value >= 0 || "Score must be positive",
                       }}
-                      name={`scores.${playerScore.player.name}.${round.num}`}
+                      name={`scores.${playerScore.player.name}.${
+                        round.num - 1
+                      }`}
                       render={({ field: { onChange, onBlur, value } }) => (
                         <NumberInput
                           placeholder="Score"

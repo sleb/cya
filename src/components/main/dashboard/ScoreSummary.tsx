@@ -14,7 +14,7 @@ const ScoreSummary = ({ game: { rounds, players } }: Props) => {
       {players.map(({ name }, index) => (
         <div key={index} className="flex justify-items-end justify-end">
           <span className="font-bold">{name}</span>
-          <span>:{" " + formatScore(scores.get(name) || 0)}</span>
+          <span>:{" " + formatScore(scores[name] || 0)}</span>
         </div>
       ))}
     </div>

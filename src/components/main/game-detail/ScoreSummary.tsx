@@ -19,7 +19,7 @@ const ScoreSummary = ({ game: { players, rounds } }: Props) => {
       <div>
         {players.map(({ name }, index) => (
           <p key={index}>
-            <span>{formatScore(scores.get(name) || 0)}</span>
+            <span>{formatScore(scores[name] || 0)}</span>
           </p>
         ))}
       </div>
