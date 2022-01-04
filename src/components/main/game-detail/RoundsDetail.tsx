@@ -5,6 +5,7 @@ import { PlayerScore } from "../../../model/player-score";
 import { addRoundToGame, updateRounds } from "../../../services/game-service";
 import Button from "../../Button";
 import NumberInput from "../../NumberInput";
+import WhiteDiv from "../../WhiteDiv";
 
 export type Props = {
   game: Game;
@@ -50,7 +51,7 @@ const RoundsDetail = ({ game }: Props) => {
   }, [game, reset]);
 
   return (
-    <div className="bg-white shadow text-sm rounded-md p-2">
+    <WhiteDiv>
       <form onSubmit={handleSubmit(updateScores)}>
         <label className="block text-gray-700 font-bold mb-2">
           Rounds ({game.rounds.length})
@@ -108,7 +109,7 @@ const RoundsDetail = ({ game }: Props) => {
           <Button type="submit" title="Cancel" onClick={() => reset()} invert />
         </div>
       </form>
-    </div>
+    </WhiteDiv>
   );
 };
 
