@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
@@ -12,10 +12,6 @@ type Inputs = {
   password: string;
 };
 
-const login = ({ email, password }: Inputs) => {
-  signInUser(email, password).catch(console.error);
-};
-
 const LoginPage = () => {
   const {
     handleSubmit,
@@ -23,11 +19,20 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
 
+  const [loginError, setLoginError] = useState<Error | null>(null);
+
+  const login = ({ email, password }: Inputs) => {
+    signInUser(email, password).catch(setLoginError);
+  };
+
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full flex flex-col justify-center">
         <img src={logo} alt="logo" className="rounded-full shadow-lg" />
-        <form onSubmit={handleSubmit(login)} className="mt-8">
+        <div className="text-red-500 text-sm h-5 font-bold my-4 flex justify-center">
+          {loginError && <p>{loginError.message}</p>}
+        </div>
+        <form onSubmit={handleSubmit(login)}>
           <Controller
             name="email"
             control={control}
