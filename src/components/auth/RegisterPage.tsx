@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
@@ -13,10 +13,6 @@ type Inputs = {
   confirmPassword: string;
 };
 
-const register = ({ name, email, password }: Inputs) => {
-  signUpUser(name, email, password).catch(console.error);
-};
-
 const RegisterPage = () => {
   const {
     handleSubmit,
@@ -25,11 +21,20 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
 
+  const [registerError, setRegisterError] = useState<Error | null>(null);
+
+  const register = ({ name, email, password }: Inputs) => {
+    signUpUser(name.trim(), email.trim(), password).catch(setRegisterError);
+  };
+
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full flex flex-col justify-center">
         <img src={logo} alt="logo" className="rounded-full shadow-lg" />
-        <form onSubmit={handleSubmit(register)} className="mt-8">
+        <div className="text-red-500 text-sm h-5 font-bold my-4 flex justify-center">
+          {registerError && <p>{registerError.message}</p>}
+        </div>
+        <form onSubmit={handleSubmit(register)}>
           <Controller
             name="name"
             control={control}
