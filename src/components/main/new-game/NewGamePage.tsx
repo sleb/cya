@@ -5,8 +5,8 @@ import { currentUser } from "../../../services/auth-service";
 import { createGame } from "../../../services/game-service";
 import Button from "../../Button";
 import Header from "../Header";
-import NumberInput from "../../NumberInput";
 import TextInput from "../../TextInput";
+import SelectInput from "../../SelectInput";
 
 interface Props {}
 
@@ -50,13 +50,12 @@ const NewGamePage = (props: Props) => {
               message: "Please use at least 4 characters",
             },
           }}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, onBlur } }) => (
             <TextInput
               placeholder="Name"
               error={errors.name?.message}
               onChange={onChange}
               onBlur={onBlur}
-              value={value}
             />
           )}
         />
@@ -73,16 +72,16 @@ const NewGamePage = (props: Props) => {
               return (+value >= 4 && +value <= 6) || "Please use 4, 5, or 6";
             },
           }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <NumberInput
-              placeholder="Cards"
+          render={({ field: { onChange, onBlur } }) => (
+            <SelectInput
               error={errors.cards?.message}
               onChange={onChange}
               onBlur={onBlur}
-              value={value}
-              min={4}
-              max={6}
-            />
+            >
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+              <option value={6}>6</option>
+            </SelectInput>
           )}
         />
         <Button title="New Game" type="submit" />

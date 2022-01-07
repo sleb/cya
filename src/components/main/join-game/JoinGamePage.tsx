@@ -63,13 +63,12 @@ const JoinGamePage = (props: Props) => {
         <Controller
           name="message"
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, onBlur } }) => (
             <TextInput
               placeholder="Message (optional)"
               error={errors.message?.message}
               onChange={onChange}
               onBlur={onBlur}
-              value={value}
             />
           )}
         />

@@ -39,13 +39,12 @@ const RegisterPage = () => {
             name="name"
             control={control}
             rules={{ required: { value: true, message: "Name is required" } }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Name"
                 error={errors.name?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
               />
             )}
           />
@@ -56,13 +55,12 @@ const RegisterPage = () => {
               required: { value: true, message: "Email is required" },
               pattern: { value: /^\S+@\S+$/, message: "Email is invalid" },
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Email"
                 error={errors.email?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
               />
             )}
           />
@@ -76,13 +74,12 @@ const RegisterPage = () => {
                 message: "Password must be at least 6 characters",
               },
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Password"
                 error={errors.password?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
                 secure
               />
             )}
@@ -95,13 +92,12 @@ const RegisterPage = () => {
               validate: (v) =>
                 v === getValues("password") || "Passwords don't match",
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Confirm password"
                 error={errors.confirmPassword?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
                 secure
               />
             )}

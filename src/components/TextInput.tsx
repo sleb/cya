@@ -2,7 +2,6 @@ import React, { ChangeEventHandler } from "react";
 
 type Props = {
   placeholder: string;
-  value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur: () => void;
   error?: string;

@@ -40,13 +40,12 @@ const LoginPage = () => {
               required: { value: true, message: "Email is required" },
               pattern: { value: /^\S+@\S+$/, message: "Email is invalid" },
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Email"
                 error={errors.email?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
               />
             )}
           />
@@ -56,13 +55,12 @@ const LoginPage = () => {
             rules={{
               required: { value: true, message: "Password is required" },
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <TextInput
                 placeholder="Password"
                 error={errors.password?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                value={value}
                 secure
               />
             )}
