@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { Game, roundsToFormData } from "../../../model/game";
 import { PlayerScore } from "../../../model/player-score";
 import { addRoundToGame, updateRounds } from "../../../services/game-service";
@@ -31,10 +32,17 @@ const RoundsDetail = ({ game }: Props) => {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({ mode: "onBlur" });
+    formState: { errors, isDirty },
+  } = useForm<Inputs>({
+    mode: "onBlur",
+    defaultValues: roundsToFormData(game.rounds),
+  });
 
   const updateScores = ({ scores }: Inputs) => {
+    if (!isDirty) {
+      return;
+    }
+
     const rounds = game.rounds.map((round) => {
       const playerScores = round.playerScores.map((playerScore) => {
         const score = +scores[playerScore.player.name][round.num - 1];
@@ -50,9 +58,14 @@ const RoundsDetail = ({ game }: Props) => {
     reset(roundsToFormData(game.rounds));
   }, [game, reset]);
 
+  const navigate = useNavigate();
+
   return (
     <WhiteDiv>
-      <form onSubmit={handleSubmit(updateScores)}>
+      <form
+        onSubmit={handleSubmit(updateScores)}
+        onBlur={handleSubmit(updateScores)}
+      >
         <label className="block text-gray-700 font-bold mb-2">
           Rounds ({game.rounds.length})
         </label>
@@ -87,7 +100,7 @@ const RoundsDetail = ({ game }: Props) => {
                           value={value}
                           error={
                             errors.scores?.[playerScore.player.name]?.[
-                              round.num
+                              round.num - 1
                             ]?.message
                           }
                         />
@@ -98,15 +111,15 @@ const RoundsDetail = ({ game }: Props) => {
               </div>
             </div>
           ))}
-          <Button type="button" title="Add Round" onClick={addRound} />
         </div>
         <div className="mt-2 flex flex-row space-x-2">
+          <Button type="button" title="Add Round" onClick={addRound} />
           <Button
             type="submit"
-            title="Update Scores"
-            disabled={!isDirty || !isValid}
+            title="Go Back"
+            onClick={() => navigate("/dashboard")}
+            invert
           />
-          <Button type="submit" title="Cancel" onClick={() => reset()} invert />
         </div>
       </form>
     </WhiteDiv>
