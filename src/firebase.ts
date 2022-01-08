@@ -1,4 +1,5 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
+import {getPerformance} from "firebase/performance";
 
 export const app =
   getApps().length === 0
@@ -12,3 +13,5 @@ export const app =
         measurementId: "G-JFETRWPCZQ",
       })
     : getApp();
+
+export const perf = getPerformance(app);
