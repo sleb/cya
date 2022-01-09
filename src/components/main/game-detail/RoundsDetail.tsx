@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
+import Icon from "@mdi/react";
+import { mdiDelete } from "@mdi/js";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Game, roundsToFormData } from "../../../model/game";
 import { PlayerScore } from "../../../model/player-score";
 import { addRoundToGame, updateRounds } from "../../../services/game-service";
 import Button from "../../Button";
-import NumberInput from "../../NumberInput";
 import WhiteDiv from "../../WhiteDiv";
+import Input from "../../Input";
 
 export type Props = {
   game: Game;
@@ -23,7 +25,7 @@ const RoundsDetail = ({ game }: Props) => {
       player,
     }));
     addRoundToGame(game.id, {
-      num: game.rounds.length + 1,
+      startTime: Date.now(),
       playerScores,
     }).catch(console.error);
   };
@@ -32,10 +34,9 @@ const RoundsDetail = ({ game }: Props) => {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isDirty },
+    formState: { isDirty },
   } = useForm<Inputs>({
     mode: "onBlur",
-    defaultValues: roundsToFormData(game.rounds),
   });
 
   const updateScores = ({ scores }: Inputs) => {
@@ -43,15 +44,21 @@ const RoundsDetail = ({ game }: Props) => {
       return;
     }
 
-    const rounds = game.rounds.map((round) => {
+    const rounds = game.rounds.map((round, roundIndex) => {
       const playerScores = round.playerScores.map((playerScore) => {
-        const score = +scores[playerScore.player.name][round.num - 1];
+        const score = +scores[playerScore.player.name][roundIndex];
         return { ...playerScore, score };
       });
       return { ...round, playerScores };
     });
 
     updateRounds(game.id, rounds).catch(console.error);
+  };
+
+  const deleteRound = (index: number) => {
+    const dup = [...game.rounds];
+    dup.splice(index, 1);
+    updateRounds(game.id, dup).catch(console.error);
   };
 
   useEffect(() => {
@@ -70,14 +77,23 @@ const RoundsDetail = ({ game }: Props) => {
           Rounds ({game.rounds.length})
         </label>
         <div className="px-4">
-          {game.rounds.map((round, gameIndex) => (
-            <div key={gameIndex}>
-              <label
-                key={round.num}
-                className="block text-gray-700 mb-2 border-b border-green-800"
-              >
-                Round {round.num}
-              </label>
+          {game.rounds.map((round, roundIndex) => (
+            <div key={roundIndex}>
+              <div className="flex flex-row mb-2 border-b border-green-800">
+                <button
+                  className="text-gray-400 hover:text-red-500"
+                  onClick={() => deleteRound(roundIndex)}
+                >
+                  <Icon path={mdiDelete} size={0.75} />
+                </button>
+                <label key={roundIndex} className="block text-gray-700">
+                  Round{" "}
+                  {new Intl.DateTimeFormat("en-US", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  }).format(round.startTime)}
+                </label>
+              </div>
               <div className="px-4">
                 {round.playerScores.map((playerScore, playerScoreIndex) => (
                   <div key={playerScoreIndex} className="flex justify-between">
@@ -89,20 +105,20 @@ const RoundsDetail = ({ game }: Props) => {
                         validate: (value) =>
                           value >= 0 || "Score must be positive",
                       }}
-                      name={`scores.${playerScore.player.name}.${
-                        round.num - 1
-                      }`}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <NumberInput
+                      name={`scores.${playerScore.player.name}.${roundIndex}`}
+                      defaultValue={playerScore.score}
+                      render={({
+                        fieldState: { error },
+                        field: { onChange, onBlur, value, name },
+                      }) => (
+                        <Input
+                          name={name}
+                          type="number"
                           placeholder="Score"
                           onBlur={onBlur}
                           onChange={onChange}
                           value={value}
-                          error={
-                            errors.scores?.[playerScore.player.name]?.[
-                              round.num - 1
-                            ]?.message
-                          }
+                          error={error?.message}
                         />
                       )}
                     />
@@ -112,16 +128,16 @@ const RoundsDetail = ({ game }: Props) => {
             </div>
           ))}
         </div>
-        <div className="mt-2 flex flex-row space-x-2">
-          <Button type="button" title="Add Round" onClick={addRound} />
-          <Button
-            type="submit"
-            title="Go Back"
-            onClick={() => navigate("/dashboard")}
-            invert
-          />
-        </div>
       </form>
+      <div className="mt-2 flex flex-row space-x-2">
+        <Button type="button" title="Add Round" onClick={addRound} />
+        <Button
+          type="submit"
+          title="Go Back"
+          onClick={() => navigate("/dashboard")}
+          invert
+        />
+      </div>
     </WhiteDiv>
   );
 };

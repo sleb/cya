@@ -3,14 +3,14 @@ import { Round } from "./round";
 
 const rounds: Round[] = [
   {
-    num: 1,
+    startTime: 1,
     playerScores: [
       { player: { name: "bob", id: "1" }, score: 10 },
       { player: { name: "bill", id: "2" }, score: 50 },
     ],
   },
   {
-    num: 2,
+    startTime: 2,
     playerScores: [
       { player: { name: "bob", id: "1" }, score: 90 },
       { player: { name: "bill", id: "2" }, score: 150 },

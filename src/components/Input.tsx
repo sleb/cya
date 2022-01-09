@@ -1,20 +1,13 @@
-import React, { ChangeEventHandler } from "react";
+import React from "react";
 
-type Props = {
-  placeholder: string;
-  value: number;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  onBlur: () => void;
-  min?: number;
-  max?: number;
+export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
-};
+}
 
-const NumberInput = ({ error, ...props }: Props) => {
+const Input = ({ error, ...props }: Props) => {
   return (
     <div className="flex flex-col h-10 mb-2">
       <input
-        type="number"
         className={`w-full rounded-md px-2 border ${
           error && "bg-red-100 placeholder-red-300 ring-red-500 ring-1"
         }`}
@@ -25,4 +18,4 @@ const NumberInput = ({ error, ...props }: Props) => {
   );
 };
 
-export default NumberInput;
+export default Input;

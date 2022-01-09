@@ -5,7 +5,7 @@ import { currentUser } from "../../../services/auth-service";
 import { createGame } from "../../../services/game-service";
 import Button from "../../Button";
 import Header from "../Header";
-import TextInput from "../../TextInput";
+import Input from "../../Input";
 import SelectInput from "../../SelectInput";
 
 interface Props {}
@@ -51,7 +51,7 @@ const NewGamePage = (props: Props) => {
             },
           }}
           render={({ field: { onChange, onBlur } }) => (
-            <TextInput
+            <Input
               placeholder="Name"
               error={errors.name?.message}
               onChange={onChange}

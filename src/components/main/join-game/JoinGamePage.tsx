@@ -7,7 +7,7 @@ import { getGame } from "../../../services/game-service";
 import { createJoinRequest } from "../../../services/join-request-service";
 import Button from "../../Button";
 import Header from "../Header";
-import TextInput from "../../TextInput";
+import Input from "../../Input";
 
 interface Props {}
 
@@ -64,7 +64,7 @@ const JoinGamePage = (props: Props) => {
           name="message"
           control={control}
           render={({ field: { onChange, onBlur } }) => (
-            <TextInput
+            <Input
               placeholder="Message (optional)"
               error={errors.message?.message}
               onChange={onChange}

@@ -1,6 +1,6 @@
 import { PlayerScore } from "./player-score";
 
 export interface Round {
-  num: number;
+  startTime: number;
   playerScores: PlayerScore[];
 }

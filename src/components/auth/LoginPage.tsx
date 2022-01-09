@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
-import TextInput from "../TextInput";
+import Input from "../Input";
 import logo from "../../images/cya.jpg";
 import { signInUser } from "../../services/auth-service";
 import Button from "../Button";
@@ -13,11 +13,7 @@ type Inputs = {
 };
 
 const LoginPage = () => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<Inputs>({ mode: "onBlur" });
+  const { handleSubmit, control } = useForm<Inputs>({ mode: "onBlur" });
 
   const [loginError, setLoginError] = useState<Error | null>(null);
 
@@ -36,14 +32,21 @@ const LoginPage = () => {
           <Controller
             name="email"
             control={control}
+            defaultValue=""
             rules={{
               required: { value: true, message: "Email is required" },
               pattern: { value: /^\S+@\S+$/, message: "Email is invalid" },
             }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, value, name },
+              fieldState: { error },
+            }) => (
+              <Input
+                name={name}
+                type="email"
+                autoCapitalize="none"
                 placeholder="Email"
-                error={errors.email?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
               />
@@ -52,16 +55,21 @@ const LoginPage = () => {
           <Controller
             name="password"
             control={control}
+            defaultValue=""
             rules={{
               required: { value: true, message: "Password is required" },
             }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, name, value },
+              fieldState: { error },
+            }) => (
+              <Input
+                type="password"
+                autoCapitalize="none"
                 placeholder="Password"
-                error={errors.password?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                secure
               />
             )}
           />

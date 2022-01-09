@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
-import TextInput from "../TextInput";
+import Input from "../Input";
 import logo from "../../images/cya.jpg";
 import { signUpUser } from "../../services/auth-service";
 
@@ -14,12 +14,9 @@ type Inputs = {
 };
 
 const RegisterPage = () => {
-  const {
-    handleSubmit,
-    getValues,
-    control,
-    formState: { errors },
-  } = useForm<Inputs>({ mode: "onBlur" });
+  const { handleSubmit, getValues, control } = useForm<Inputs>({
+    mode: "onBlur",
+  });
 
   const [registerError, setRegisterError] = useState<Error | null>(null);
 
@@ -38,11 +35,18 @@ const RegisterPage = () => {
           <Controller
             name="name"
             control={control}
+            defaultValue=""
             rules={{ required: { value: true, message: "Name is required" } }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, name, value },
+              fieldState: { error },
+            }) => (
+              <Input
+                name={name}
+                value={value}
+                type="text"
                 placeholder="Name"
-                error={errors.name?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
               />
@@ -51,14 +55,22 @@ const RegisterPage = () => {
           <Controller
             name="email"
             control={control}
+            defaultValue=""
             rules={{
               required: { value: true, message: "Email is required" },
               pattern: { value: /^\S+@\S+$/, message: "Email is invalid" },
             }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, name, value },
+              fieldState: { error },
+            }) => (
+              <Input
+                name={name}
+                value={value}
+                type="email"
+                autoCapitalize="none"
                 placeholder="Email"
-                error={errors.email?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
               />
@@ -67,6 +79,7 @@ const RegisterPage = () => {
           <Controller
             name="password"
             control={control}
+            defaultValue=""
             rules={{
               required: { value: true, message: "Password is required" },
               minLength: {
@@ -74,31 +87,44 @@ const RegisterPage = () => {
                 message: "Password must be at least 6 characters",
               },
             }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, name, value },
+              fieldState: { error },
+            }) => (
+              <Input
+                name={name}
+                value={value}
+                type="password"
+                autoCapitalize="none"
                 placeholder="Password"
-                error={errors.password?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                secure
               />
             )}
           />
           <Controller
             name="confirmPassword"
             control={control}
+            defaultValue=""
             rules={{
               required: { value: true, message: "Re-type password" },
               validate: (v) =>
                 v === getValues("password") || "Passwords don't match",
             }}
-            render={({ field: { onChange, onBlur } }) => (
-              <TextInput
+            render={({
+              field: { onChange, onBlur, value, name },
+              fieldState: { error },
+            }) => (
+              <Input
+                name={name}
+                value={value}
+                type="password"
+                autoCapitalize="none"
                 placeholder="Confirm password"
-                error={errors.confirmPassword?.message}
+                error={error?.message}
                 onChange={onChange}
                 onBlur={onBlur}
-                secure
               />
             )}
           />

@@ -30,10 +30,10 @@ export interface RoundsFormData {
 }
 
 export const roundsToFormData = (rounds: Round[]): RoundsFormData => {
-  const roundsData = rounds.reduce((scores, round) => {
+  const roundsData = rounds.reduce((scores, round, index) => {
     round.playerScores.forEach((playerScore) => {
       scores[playerScore.player.name] = scores[playerScore.player.name] || [];
-      scores[playerScore.player.name][round.num - 1] = playerScore.score;
+      scores[playerScore.player.name][index] = playerScore.score;
     });
     return scores;
   }, {} as Record<string, number[]>);
