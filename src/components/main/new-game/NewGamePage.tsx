@@ -67,7 +67,7 @@ const NewGamePage = (props: Props) => {
           <option value={5}>5</option>
           <option value={6}>6</option>
         </SelectInput>
-        <Button title="New Game" type="submit" />
+        <Button type="submit">New Game</Button>
       </form>
     </div>
   );

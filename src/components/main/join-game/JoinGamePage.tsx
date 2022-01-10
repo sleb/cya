@@ -65,7 +65,7 @@ const JoinGamePage = (props: Props) => {
           error={errors.message?.message}
           {...register("message")}
         />
-        <Button type="submit" title="Join Game" />
+        <Button type="submit">Join Game</Button>
       </form>
     </div>
   );

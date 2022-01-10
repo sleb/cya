@@ -24,17 +24,16 @@ const JoinRequestListItem = ({ joinRequest }: Props) => {
         {joinRequest.message && `: "${joinRequest.message}"`}
       </div>
       <div className="flex flex-row space-x-2">
+        <Button type="button" onClick={() => acceptJoinRequest(joinRequest)}>
+          Accept
+        </Button>
         <Button
           type="button"
-          title="Accept"
-          onClick={() => acceptJoinRequest(joinRequest)}
-        />
-        <Button
-          type="button"
-          title="Reject"
           onClick={() => deleteJoinRequest(joinRequest.id)}
           invert
-        />
+        >
+          Reject
+        </Button>
       </div>
     </div>
   );

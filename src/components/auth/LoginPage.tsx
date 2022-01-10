@@ -54,7 +54,7 @@ const LoginPage = () => {
               required: { value: true, message: "Password is required" },
             })}
           />
-          <Button title="Login" type="submit" />
+          <Button type="submit">Login</Button>
         </form>
         <Link
           to="/register"

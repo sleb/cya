@@ -38,11 +38,9 @@ const DashboardPage = (props: Props) => {
         {games.map((game, i) => (
           <GameListItem key={i} game={game} />
         ))}
-        <Button
-          title="New Game"
-          type="button"
-          onClick={() => navigate("/game/new")}
-        />
+        <Button type="button" onClick={() => navigate("/game/new")}>
+          New Game
+        </Button>
       </div>
     </div>
   );

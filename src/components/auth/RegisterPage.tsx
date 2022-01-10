@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import Input from "../Input";
 import logo from "../../images/cya.jpg";
 import { signUpUser } from "../../services/auth-service";
+import Button from "../Button";
 
 type Inputs = {
   name: string;
@@ -79,12 +80,7 @@ const RegisterPage = () => {
                 v === getValues("password") || "Passwords don't match",
             })}
           />
-          <button
-            type="submit"
-            className="bg-green-700 text-yellow-300 px-2 py-1 w-full rounded-md"
-          >
-            Register
-          </button>
+          <Button type="submit">Register</Button>
         </form>
         <Link
           to="/login"

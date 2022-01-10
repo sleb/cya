@@ -127,13 +127,12 @@ const RoundsDetail = ({ game }: Props) => {
         </div>
       </form>
       <div className="mt-2 flex flex-row space-x-2">
-        <Button type="button" title="Add Round" onClick={addRound} />
-        <Button
-          type="submit"
-          title="Go Back"
-          onClick={() => navigate("/dashboard")}
-          invert
-        />
+        <Button type="button" onClick={addRound}>
+          Add Round
+        </Button>
+        <Button type="submit" onClick={() => navigate("/dashboard")} invert>
+          Go Back
+        </Button>
       </div>
     </WhiteDiv>
   );
