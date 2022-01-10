@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import { Game } from "../../../model/game";
 import { getGame, onGameSnapshot } from "../../../services/game-service";
 import Header from "../Header";
-import PlayersDetail from "./PlayersDetail";
+import JoinRequestList from "./JoinRequestList";
+import PlayerList from "./PlayerList";
 import RoundsDetail from "./RoundsDetail";
 
 interface Props {}
@@ -48,7 +49,8 @@ const GameDetailPage = (props: Props) => {
   return (
     <div>
       <Header title="Game Details" />
-      <PlayersDetail game={game} />
+      <PlayerList game={game} />
+      <JoinRequestList game={game} />
       <RoundsDetail game={game} />
     </div>
   );

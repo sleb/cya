@@ -102,9 +102,10 @@ const RoundsDetail = ({ game }: Props) => {
                       type="number"
                       placeholder="Score"
                       error={
-                        errors?.scores?.[playerScore.player.name][roundIndex]
+                        errors?.scores?.[playerScore.player.name]?.[roundIndex]
                           ?.message
                       }
+                      align="right"
                       {...register(
                         `scores.${playerScore.player.name}.${roundIndex}`,
                         {

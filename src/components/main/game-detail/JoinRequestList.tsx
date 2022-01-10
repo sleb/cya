@@ -5,13 +5,12 @@ import { JoinRequest } from "../../../model/join-request";
 import { onJoinRequestSnapshot } from "../../../services/join-request-service";
 import WhiteDiv from "../../WhiteDiv";
 import JoinRequestListItem from "./JoinRequestListItem";
-import ScoreSummary from "./ScoreSummary";
 
-export type Props = {
+interface Props {
   game: Game;
-};
+}
 
-const PlayersDetail = ({ game }: Props) => {
+const JoinRequestList = ({ game }: Props) => {
   const [joinRequests, setJoinRequests] = useState<null | JoinRequest[]>(null);
   useEffect(() => {
     return onJoinRequestSnapshot(
@@ -22,29 +21,20 @@ const PlayersDetail = ({ game }: Props) => {
   }, [game]);
 
   return (
-    <>
-      <WhiteDiv>
-        <label className="block text-gray-700 text-sm font-bold">
-          Players ({game.players.length})
-        </label>
-        <div className="px-4">
-          <ScoreSummary game={game} />
-        </div>
-      </WhiteDiv>
-
-      <WhiteDiv>
-        <label className="block text-gray-700 text-sm font-bold">
-          Join Requests ({joinRequests?.length || 0})
-        </label>
-        <div className="px-4">
-          <ul>
-            {joinRequests?.map((joinRequest, index) => (
-              <li key={index}>
-                <JoinRequestListItem joinRequest={joinRequest} />
-              </li>
-            ))}
-          </ul>
-        </div>
+    <WhiteDiv>
+      <label className="block text-gray-700 text-sm font-bold">
+        Join Requests ({joinRequests?.length || 0})
+      </label>
+      <div className="px-4">
+        <ul>
+          {joinRequests?.map((joinRequest, index) => (
+            <li key={index}>
+              <JoinRequestListItem joinRequest={joinRequest} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="px-4">
         <span>
           Share the
           <Link
@@ -55,9 +45,9 @@ const PlayersDetail = ({ game }: Props) => {
           </Link>
           with your frields!!
         </span>
-      </WhiteDiv>
-    </>
+      </div>
+    </WhiteDiv>
   );
 };
 
-export default PlayersDetail;
+export default JoinRequestList;
