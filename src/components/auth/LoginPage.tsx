@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import Input from "../Input";
 import logo from "../../images/cya.jpg";
@@ -13,7 +13,13 @@ type Inputs = {
 };
 
 const LoginPage = () => {
-  const { handleSubmit, control } = useForm<Inputs>({ mode: "onBlur" });
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<Inputs>({
+    mode: "onBlur",
+  });
 
   const [loginError, setLoginError] = useState<Error | null>(null);
 
@@ -29,49 +35,24 @@ const LoginPage = () => {
           {loginError && <p>{loginError.message}</p>}
         </div>
         <form onSubmit={handleSubmit(login)}>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            rules={{
+          <Input
+            type="email"
+            placeholder="Email"
+            autoCapitalize="none"
+            error={errors?.email?.message}
+            {...register("email", {
               required: { value: true, message: "Email is required" },
               pattern: { value: /^\S+@\S+$/, message: "Email is invalid" },
-            }}
-            render={({
-              field: { onChange, onBlur, value, name },
-              fieldState: { error },
-            }) => (
-              <Input
-                name={name}
-                type="email"
-                autoCapitalize="none"
-                placeholder="Email"
-                error={error?.message}
-                onChange={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            })}
           />
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            rules={{
+          <Input
+            type="password"
+            autoCapitalize="none"
+            placeholder="Password"
+            error={errors?.password?.message}
+            {...register("password", {
               required: { value: true, message: "Password is required" },
-            }}
-            render={({
-              field: { onChange, onBlur, name, value },
-              fieldState: { error },
-            }) => (
-              <Input
-                type="password"
-                autoCapitalize="none"
-                placeholder="Password"
-                error={error?.message}
-                onChange={onChange}
-                onBlur={onBlur}
-              />
-            )}
+            })}
           />
           <Button title="Login" type="submit" />
         </form>

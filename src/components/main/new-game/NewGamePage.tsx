@@ -1,5 +1,5 @@
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { currentUser } from "../../../services/auth-service";
 import { createGame } from "../../../services/game-service";
@@ -30,7 +30,7 @@ const NewGamePage = (props: Props) => {
 
   const {
     handleSubmit,
-    control,
+    register,
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
   return (
@@ -40,50 +40,33 @@ const NewGamePage = (props: Props) => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Name your game
         </label>
-        <Controller
-          name="name"
-          control={control}
-          rules={{
+        <Input
+          placeholder="Name"
+          error={errors.name?.message}
+          {...register("name", {
             required: { value: true, message: "Name is required" },
             minLength: {
               value: 4,
               message: "Please use at least 4 characters",
             },
-          }}
-          render={({ field: { onChange, onBlur } }) => (
-            <Input
-              placeholder="Name"
-              error={errors.name?.message}
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-          )}
+          })}
         />
-
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Number of cards
         </label>
-        <Controller
-          name="cards"
-          control={control}
-          defaultValue={4}
-          rules={{
+        <SelectInput
+          error={errors.cards?.message}
+          {...register("cards", {
             validate: (value) => {
-              return (+value >= 4 && +value <= 6) || "Please use 4, 5, or 6";
+              return (value >= 4 && value <= 6) || "Please use 4, 5, or 6";
             },
-          }}
-          render={({ field: { onChange, onBlur } }) => (
-            <SelectInput
-              error={errors.cards?.message}
-              onChange={onChange}
-              onBlur={onBlur}
-            >
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-              <option value={6}>6</option>
-            </SelectInput>
-          )}
-        />
+            valueAsNumber: true,
+          })}
+        >
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+          <option value={6}>6</option>
+        </SelectInput>
         <Button title="New Game" type="submit" />
       </form>
     </div>

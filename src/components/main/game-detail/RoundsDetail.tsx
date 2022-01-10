@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Icon from "@mdi/react";
 import { mdiDelete } from "@mdi/js";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Game, roundsToFormData } from "../../../model/game";
 import { PlayerScore } from "../../../model/player-score";
@@ -33,8 +33,8 @@ const RoundsDetail = ({ game }: Props) => {
   const {
     handleSubmit,
     reset,
-    control,
-    formState: { isDirty },
+    register,
+    formState: { errors, isDirty },
   } = useForm<Inputs>({
     mode: "onBlur",
   });
@@ -46,7 +46,7 @@ const RoundsDetail = ({ game }: Props) => {
 
     const rounds = game.rounds.map((round, roundIndex) => {
       const playerScores = round.playerScores.map((playerScore) => {
-        const score = +scores[playerScore.player.name][roundIndex];
+        const score = scores[playerScore.player.name][roundIndex];
         return { ...playerScore, score };
       });
       return { ...round, playerScores };
@@ -98,28 +98,24 @@ const RoundsDetail = ({ game }: Props) => {
                 {round.playerScores.map((playerScore, playerScoreIndex) => (
                   <div key={playerScoreIndex} className="flex justify-between">
                     {`${playerScore.player.name}: `}
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: { value: true, message: "Score is required" },
-                        validate: (value) =>
-                          value >= 0 || "Score must be positive",
-                      }}
-                      name={`scores.${playerScore.player.name}.${roundIndex}`}
-                      defaultValue={playerScore.score}
-                      render={({
-                        fieldState: { error },
-                        field: { onChange, onBlur, value, name },
-                      }) => (
-                        <Input
-                          name={name}
-                          type="number"
-                          placeholder="Score"
-                          onBlur={onBlur}
-                          onChange={onChange}
-                          value={value}
-                          error={error?.message}
-                        />
+                    <Input
+                      type="number"
+                      placeholder="Score"
+                      error={
+                        errors?.scores?.[playerScore.player.name][roundIndex]
+                          ?.message
+                      }
+                      {...register(
+                        `scores.${playerScore.player.name}.${roundIndex}`,
+                        {
+                          required: {
+                            value: true,
+                            message: "Score is required",
+                          },
+                          validate: (value) =>
+                            value >= 0 || "Score must be positive",
+                          valueAsNumber: true,
+                        }
                       )}
                     />
                   </div>

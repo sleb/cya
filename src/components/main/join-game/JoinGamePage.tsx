@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { Game } from "../../../model/game";
 import { currentUser } from "../../../services/auth-service";
@@ -27,7 +27,7 @@ const JoinGamePage = (props: Props) => {
 
   const {
     handleSubmit,
-    control,
+    register,
     formState: { errors },
   } = useForm<Inputs>({ mode: "onBlur" });
 
@@ -60,19 +60,11 @@ const JoinGamePage = (props: Props) => {
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Message
         </label>
-        <Controller
-          name="message"
-          control={control}
-          render={({ field: { onChange, onBlur } }) => (
-            <Input
-              placeholder="Message (optional)"
-              error={errors.message?.message}
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-          )}
+        <Input
+          placeholder="Message (optional)"
+          error={errors.message?.message}
+          {...register("message")}
         />
-
         <Button type="submit" title="Join Game" />
       </form>
     </div>
