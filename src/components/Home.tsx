@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signInUser } from "../services/AuthService";
 import { userIdState } from "../state/UserIdState";
+import Profile from "./Profile";
 
 const Home = () => {
   const uid = useRecoilValue(userIdState);
@@ -32,16 +33,19 @@ const Home = () => {
   const renderButtons = uid ? renderMenu : renderLogin;
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      flexGrow={1}
-      justifyContent="center"
-      alignItems="center"
-      margin={2}
-    >
-      {renderButtons}
-    </Box>
+    <>
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        justifyContent="center"
+        alignItems="center"
+        margin={2}
+      >
+        {renderButtons}
+      </Box>
+      <Profile />
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import {
   DocumentSnapshot,
   SnapshotOptions,
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -12,6 +13,7 @@ import {
   getFirestore,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { app } from "../firebase";
@@ -32,7 +34,7 @@ const gameConverter = {
 
 const GAMES = "games";
 
-const gameRef = (gameId: string): DocumentReference<GameData> => {
+export const gameRef = (gameId: string): DocumentReference<GameData> => {
   const db = getFirestore(app);
   return doc(db, GAMES, gameId).withConverter(gameConverter);
 };
@@ -44,14 +46,14 @@ const gamesRef = (): CollectionReference<GameData> => {
 
 export const getGame = async (gameId: string): Promise<Game | undefined> => {
   const docRef = gameRef(gameId);
-  const docSnap = await   getDoc(docRef);
+  const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() };
   }
 };
 
-export const deleteGame = async (gameId: string): Promise<void> => {
+export const deleteGame = (gameId: string): Promise<void> => {
   const docRef = gameRef(gameId);
   return deleteDoc(docRef);
 };
@@ -83,7 +85,6 @@ export const onGamesChange = (
     where("playerIds", "array-contains", userId)
   ).withConverter(gameConverter);
   return onSnapshot(q, (querySnap) => {
-    console.log("here");
     const games: Game[] = querySnap.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -102,4 +103,9 @@ export const onGameChange = (
       cb(game);
     }
   });
+};
+
+export const addPlayer = (gameId: string, playerId: string): Promise<void> => {
+  const docRef = gameRef(gameId);
+  return updateDoc(docRef, { playerIds: arrayUnion(playerId) });
 };

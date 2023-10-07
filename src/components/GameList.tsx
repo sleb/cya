@@ -1,8 +1,10 @@
-import { Typography } from "@mui/material";
+import { DeleteForever } from "@mui/icons-material";
+import { IconButton, Link, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Game } from "../model/Game";
-import { onGamesChange } from "../services/GameService";
+import { deleteGame, onGamesChange } from "../services/GameService";
 import { userIdState } from "../state/UserIdState";
 
 const GameList = () => {
@@ -11,6 +13,10 @@ const GameList = () => {
   const uid = useRecoilValue(userIdState)!;
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleDelete = (id: string) => {
+    deleteGame(id).catch(console.error);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -30,7 +36,14 @@ const GameList = () => {
   return (
     <ul>
       {games.map((g, i) => (
-        <li key={i}>{g.name}</li>
+        <li key={i}>
+          <Link component={RouterLink} to={g.id}>
+            {g.name}
+          </Link>
+          <IconButton onClick={() => handleDelete(g.id)}>
+            <DeleteForever fontSize="small" />
+          </IconButton>
+        </li>
       ))}
     </ul>
   );

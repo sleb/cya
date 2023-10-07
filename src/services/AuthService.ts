@@ -1,18 +1,16 @@
 import {
   GoogleAuthProvider,
   getAuth,
-  getRedirectResult,
   onAuthStateChanged,
-  signInWithRedirect,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { app } from "../firebase";
 
 export const signInUser = async (): Promise<string | null> => {
-  await signInWithRedirect(getAuth(app), new GoogleAuthProvider());
-  const credential = await getRedirectResult(getAuth(app));
+  const result = await signInWithPopup(getAuth(app), new GoogleAuthProvider());
 
-  return credential?.user?.uid ?? null;
+  return result.user.uid;
 };
 
 export const signOutUser = (): Promise<void> => {

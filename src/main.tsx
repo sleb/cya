@@ -14,6 +14,7 @@ import GameDetails from "./components/GameDetails";
 import GameList from "./components/GameList";
 import Header from "./components/Header";
 import Home from "./components/Home";
+import JoinGame from "./components/JoinGame";
 import NewGame from "./components/NewGame";
 
 const theme = createTheme({
@@ -52,7 +53,10 @@ const routes = createBrowserRouter([
                       },
                       {
                         path: ":id",
-                        element: <GameDetails />,
+                        children: [
+                          { index: true, element: <GameDetails /> },
+                          { path: "join", element: <JoinGame /> },
+                        ],
                       },
                     ],
                   },
