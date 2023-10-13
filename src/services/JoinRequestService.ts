@@ -20,6 +20,7 @@ import {
 import { app } from "../firebase";
 import { Game } from "../model/Game";
 import { JoinRequest, JoinRequestData } from "../model/JoinRequest";
+import { Player } from "../model/Player";
 import { gameRef } from "./GameService";
 
 const JOIN_REQUESTS = "join-requests";
@@ -52,13 +53,13 @@ const joinRequestsRef = (): CollectionReference<JoinRequestData> => {
 
 export const createJoinRequest = (
   game: Game,
-  uid: string,
+  player: Player,
   message: string
 ): Promise<void> => {
-  const docRef = joinRequestRef(id(game.id, uid));
+  const docRef = joinRequestRef(id(game.id, player.uid));
   return setDoc(docRef, {
     game: { id: game.id, name: game.name },
-    requestor: { id: uid, message },
+    requestor: { id: player.uid, displayName: player.displayName, message },
     approverIds: game.playerIds,
   });
 };

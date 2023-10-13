@@ -2,11 +2,10 @@ import { Box, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signInUser } from "../services/AuthService";
-import { userIdState } from "../state/UserIdState";
-import Profile from "./Profile";
+import { playerState } from "../state/PlayerState";
 
 const Home = () => {
-  const uid = useRecoilValue(userIdState);
+  const player = useRecoilValue(playerState);
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -30,22 +29,19 @@ const Home = () => {
     </Stack>
   );
 
-  const renderButtons = uid ? renderMenu : renderLogin;
+  const renderButtons = player ? renderMenu : renderLogin;
 
   return (
-    <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        flexGrow={1}
-        justifyContent="center"
-        alignItems="center"
-        margin={2}
-      >
-        {renderButtons}
-      </Box>
-      <Profile />
-    </>
+    <Box
+      display="flex"
+      flexDirection="column"
+      flexGrow={1}
+      justifyContent="center"
+      alignItems="center"
+      margin={2}
+    >
+      {renderButtons}
+    </Box>
   );
 };
 

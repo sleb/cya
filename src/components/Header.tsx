@@ -1,8 +1,8 @@
 import { AppBar, Box, Container, Link, Toolbar } from "@mui/material";
 import { Outlet, Link as RouterLink } from "react-router-dom";
-import Login from "./Login";
 import Logo from "./Logo";
 import NavMenu from "./NavMenu";
+import ProfileMenu from "./ProfileMenu";
 
 const Header = () => {
   return (
@@ -30,7 +30,7 @@ const Header = () => {
                 </Link>
               </Box>
               <Box display="flex" flexGrow={1} justifyContent="end">
-                <Login />
+                <ProfileMenu />
               </Box>
             </Box>
           </Toolbar>

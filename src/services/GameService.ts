@@ -19,6 +19,7 @@ import {
 import { app } from "../firebase";
 import { newDeck, shuffle } from "../model/Card";
 import { Game, GameData } from "../model/Game";
+import { Player } from "../model/Player";
 
 const gameConverter = {
   toFirestore(data: GameData): DocumentData {
@@ -63,7 +64,7 @@ const createGame = async (gameData: GameData): Promise<string> => {
   return (await addDoc(collectionRef, gameData)).id;
 };
 
-export const newGame = (name: string, uid: string): Promise<string> => {
+export const newGame = (name: string, player: Player): Promise<string> => {
   const deck = newDeck();
   shuffle(deck);
 
@@ -71,7 +72,8 @@ export const newGame = (name: string, uid: string): Promise<string> => {
     name,
     deck,
     dateInSecondsFromEpoch: Date.now() / 1000,
-    playerIds: [uid],
+    playerIds: [player.uid],
+    players: [player],
   });
 };
 

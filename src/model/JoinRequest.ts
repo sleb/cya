@@ -6,7 +6,8 @@ export interface JoinRequestData {
   approverIds: string[];
   requestor: {
     id: string;
-    message: string;
+    displayName: string;
+    message?: string;
   };
 }
 

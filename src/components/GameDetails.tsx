@@ -40,6 +40,14 @@ const GameDetails = () => {
             <ContentCopy fontSize="small" />
           </IconButton>
         </Box>
+        <Box>
+          <Typography variant="h2">Players</Typography>
+          <ul>
+            {game?.players.map((p, i) => (
+              <li key={i}>{p.displayName}</li>
+            ))}
+          </ul>
+        </Box>
       </Stack>
     </Box>
   );

@@ -3,19 +3,19 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { newGame } from "../services/GameService";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 type FormData = {
   name: string;
 };
 
 const NewGame = () => {
-  const uid = useRecoilValue(userIdState)!;
+  const player = useRecoilValue(playerState)!;
   const navigate = useNavigate();
   const { handleSubmit, register } = useForm<FormData>({ mode: "onSubmit" });
 
   const onSubmit = (data: FormData) => {
-    newGame(data.name, uid)
+    newGame(data.name, player)
       .then((id) => navigate(`/games/${id}`))
       .catch(console.error);
   };

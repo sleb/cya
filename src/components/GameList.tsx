@@ -5,12 +5,10 @@ import { Link as RouterLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Game } from "../model/Game";
 import { deleteGame, onGamesChange } from "../services/GameService";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 const GameList = () => {
-  // uid can't be null because route is protected by <AuthRequired />
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const uid = useRecoilValue(userIdState)!;
+  const { uid } = useRecoilValue(playerState)!;
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,13 +18,10 @@ const GameList = () => {
 
   useEffect(() => {
     setLoading(true);
-    return (
-      onGamesChange(uid, (games) => {
-        setGames(games);
-        setLoading(false);
-      }),
-      console.error
-    );
+    return onGamesChange(uid, (games) => {
+      setGames(games);
+      setLoading(false);
+    });
   }, [uid]);
 
   if (loading) {

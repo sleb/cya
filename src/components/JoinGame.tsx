@@ -9,7 +9,7 @@ import {
   createJoinRequest,
   onJoinRequestChange,
 } from "../services/JoinRequestService";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 type Params = {
   id: string;
@@ -20,9 +20,7 @@ type FormData = {
 };
 
 const JoinGame = () => {
-  // uid can't be null because route is protected by <AuthRequired />
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const uid = useRecoilValue(userIdState)!;
+  const player = useRecoilValue(playerState)!;
   const [game, setGame] = useState<Game | null>(null);
   const [gameLoading, setGameLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
@@ -45,14 +43,14 @@ const JoinGame = () => {
   useEffect(() => {
     setRequestLoading(true);
     if (id) {
-      return onJoinRequestChange(id, uid, (r) => {
+      return onJoinRequestChange(id, player.uid, (r) => {
         setRequestLoading(false);
         if (r) {
           setRequested(true);
         }
       });
     }
-  }, [id, uid]);
+  }, [id, player]);
 
   if (gameLoading || requestLoading) {
     return <Typography>Loading...</Typography>;
@@ -60,7 +58,7 @@ const JoinGame = () => {
 
   const onSubmit = ({ message }: FormData) => {
     if (game) {
-      createJoinRequest(game, uid, message).catch(console.error);
+      createJoinRequest(game, player, message).catch(console.error);
     }
   };
 
@@ -72,6 +70,7 @@ const JoinGame = () => {
           <Input
             placeholder="Enter message"
             type="text"
+            disabled={requested}
             {...register("message", { required: true })}
           />
           <Button type="submit" variant="contained" disabled={requested}>

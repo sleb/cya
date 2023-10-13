@@ -7,10 +7,10 @@ import {
   deleteJoinRequest,
   getJoinRequestsForApprover,
 } from "../services/JoinRequestService";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 const Profile = () => {
-  const uid = useRecoilValue(userIdState)!;
+  const { uid } = useRecoilValue(playerState)!;
   const [requests, setRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +40,7 @@ const Profile = () => {
       {requests.map((r, i) => (
         <li key={i}>
           <Box>
-            <Typography>{`${r.requestor.id} wants to join ${r.game.name}. Message: "${r.requestor.message}"`}</Typography>
+            <Typography>{`${r.requestor.displayName} wants to join ${r.game.name}. Message: "${r.requestor.message}"`}</Typography>
             <ButtonGroup size="small" variant="contained">
               <Button onClick={() => handleAllow(r.id)}>Allow</Button>
               <Button onClick={() => handleIgnore(r.id)}>Ignore</Button>

@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 const AuthRequired = () => {
-  const uid = useRecoilValue(userIdState);
+  const player = useRecoilValue(playerState);
 
-  if (!uid) {
+  if (!player) {
     return <Navigate to="/" />;
   }
 

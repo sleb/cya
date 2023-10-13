@@ -6,6 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { app } from "../firebase";
+import { Player } from "../model/Player";
 
 export const signInUser = async (): Promise<string | null> => {
   const result = await signInWithPopup(getAuth(app), new GoogleAuthProvider());
@@ -18,14 +19,18 @@ export const signOutUser = (): Promise<void> => {
 };
 
 export const onUserChange = (
-  cb: (uid: string | null) => void,
-  err: (e: Error) => void
+  cb: (player: Player | null) => void
 ): (() => void) => {
   return onAuthStateChanged(
     getAuth(app),
     (user) => {
-      cb(user?.uid ?? null);
+      if (user) {
+        // TODO: random name generator https://github.com/sleb/cya/issues/3
+        cb({ uid: user.uid, displayName: user.displayName ?? "random name" });
+      } else {
+        cb(null);
+      }
     },
-    err
+    console.error
   );
 };

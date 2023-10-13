@@ -3,19 +3,19 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { onUserChange } from "../services/AuthService";
-import { userIdState } from "../state/UserIdState";
+import { playerState } from "../state/PlayerState";
 
 const App = () => {
-  const setUid = useSetRecoilState(userIdState);
+  const setPlayer = useSetRecoilState(playerState);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    return onUserChange((uid) => {
-      setUid(uid);
+    return onUserChange((player) => {
+      setPlayer(player);
       setLoading(false);
-    }, console.error);
-  }, [setUid]);
+    });
+  }, [setPlayer]);
 
   if (loading) {
     return (
