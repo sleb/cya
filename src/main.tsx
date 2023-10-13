@@ -16,7 +16,6 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import JoinGame from "./components/JoinGame";
 import NewGame from "./components/NewGame";
-import Profile from "./components/Profile";
 
 const theme = createTheme({
   palette: {
@@ -44,7 +43,6 @@ const routes = createBrowserRouter([
               {
                 element: <AuthRequired />,
                 children: [
-                  { path: "profile", element: <Profile /> },
                   {
                     path: "games",
                     children: [

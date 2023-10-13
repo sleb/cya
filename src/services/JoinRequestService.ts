@@ -113,6 +113,10 @@ export const approveJoinRequest = async (id: string) => {
     runTransaction(db, async (t) => {
       t.update(gameRef(request.game.id), {
         playerIds: arrayUnion(request.requestor.id),
+        players: arrayUnion({
+          uid: request.requestor.id,
+          displayName: request.requestor.displayName,
+        }),
       });
       t.delete(joinRequestRef(request.id));
     });
