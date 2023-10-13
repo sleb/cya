@@ -1,7 +1,13 @@
 import { Logout } from "@mui/icons-material";
-import { Avatar, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Avatar,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signOutUser } from "../services/AuthService";
 import { playerState } from "../state/PlayerState";
@@ -10,7 +16,6 @@ import Login from "./Login";
 const ProfileMenu = () => {
   const player = useRecoilValue(playerState);
   const [menuElement, setMenuElement] = useState<HTMLElement | null>(null);
-  const navigate = useNavigate();
 
   const handleMenuOpen = (element: HTMLElement) => {
     setMenuElement(element);
@@ -56,7 +61,9 @@ const ProfileMenu = () => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleLogOut}>
-          <Logout />
+          <ListItemIcon>
+            <Logout />
+          </ListItemIcon>
           <Typography>Log Out</Typography>
         </MenuItem>
       </Menu>
