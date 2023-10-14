@@ -13,12 +13,14 @@ import {
   getFirestore,
   onSnapshot,
   query,
+  runTransaction,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { app } from "../firebase";
-import { newDeck, shuffle } from "../model/Card";
+import { Card, Cards } from "../model/Card";
 import { Game, GameData } from "../model/Game";
+import { Hand } from "../model/Hand";
 import { Player } from "../model/Player";
 
 const gameConverter = {
@@ -74,6 +76,67 @@ export const newGame = (name: string, player: Player): Promise<string> => {
     dateInSecondsFromEpoch: Date.now() / 1000,
     playerIds: [player.uid],
     players: [player],
+    discard: [],
+    hands: [],
+    state: "new",
+  });
+};
+
+const newDeck = (): Card[] => {
+  return Object.entries(Cards).flatMap(([k, v]) => {
+    if (k === "Gold" || k === "Silver") {
+      return new Array(5).fill(v);
+    }
+    return new Array(10).fill(v);
+  });
+};
+
+const shuffle = (deck: Card[]) => {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+};
+
+const deal = (deck: Card[], players: Player[]): Hand[] => {
+  const hands: Hand[] = players.map((p) => ({ playerId: p.uid, cards: [] }));
+  let cards = 0;
+  while (cards < 4) {
+    for (const hand of hands) {
+      const topCard = deck.pop();
+      if (!topCard) {
+        throw "too few cards in the deck!";
+      }
+
+      hand.cards.push(topCard);
+    }
+    cards += 1;
+  }
+  return hands;
+};
+
+export const startGame = (gameId: string): Promise<void> => {
+  const docRef = gameRef(gameId);
+
+  return runTransaction(getFirestore(app), async (t) => {
+    const result = await t.get(docRef);
+    if (result.exists()) {
+      const players = result.data().players;
+
+      const deck = newDeck();
+      console.log(JSON.stringify(deck));
+      shuffle(deck);
+      console.log(JSON.stringify(deck));
+
+      const hands = deal(deck, players);
+
+      t.update(docRef, {
+        deck,
+        hands,
+        nextPlayer: players[0],
+        state: "in-progress",
+      });
+    }
   });
 };
 

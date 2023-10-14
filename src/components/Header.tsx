@@ -36,7 +36,7 @@ const Header = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box display="flex" flexDirection="column" flexGrow={1}>
+      <Box display="flex" flexDirection="column" flexGrow={1} margin={2}>
         <Outlet />
       </Box>
     </>

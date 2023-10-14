@@ -18,6 +18,7 @@ import {
   deleteJoinRequest,
   onGameJoinRequestChange,
 } from "../services/JoinRequestService";
+import GameActionArea from "./GameActionArea";
 
 type Params = { id: string };
 
@@ -63,10 +64,14 @@ const GameDetails = () => {
     return <Typography>Loading...</Typography>;
   }
 
+  if (!game) {
+    return <Typography>Game not found...</Typography>;
+  }
+
   return (
     <Box>
       <Stack direction="column">
-        <Typography variant="h1">{game?.name}</Typography>
+        <Typography variant="h1">{game.name}</Typography>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Tooltip title={joinLink}>
             <Typography variant="caption" maxWidth="75%" display="block" noWrap>
@@ -80,7 +85,7 @@ const GameDetails = () => {
         <Box>
           <Typography variant="h2">Players</Typography>
           <ul>
-            {game?.players.map((p, i) => (
+            {game.players.map((p, i) => (
               <li key={i}>{p.displayName}</li>
             ))}
             {requests.map((r, i) => (
@@ -98,6 +103,7 @@ const GameDetails = () => {
             ))}
           </ul>
         </Box>
+        <GameActionArea game={game} />
       </Stack>
     </Box>
   );

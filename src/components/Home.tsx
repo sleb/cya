@@ -38,7 +38,6 @@ const Home = () => {
       flexGrow={1}
       justifyContent="center"
       alignItems="center"
-      margin={2}
     >
       {renderButtons}
     </Box>
