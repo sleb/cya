@@ -124,9 +124,7 @@ export const startGame = (gameId: string): Promise<void> => {
       const players = result.data().players;
 
       const deck = newDeck();
-      console.log(JSON.stringify(deck));
       shuffle(deck);
-      console.log(JSON.stringify(deck));
 
       const hands = deal(deck, players);
 

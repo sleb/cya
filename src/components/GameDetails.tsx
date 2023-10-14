@@ -72,16 +72,23 @@ const GameDetails = () => {
     <Box>
       <Stack direction="column">
         <Typography variant="h1">{game.name}</Typography>
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Tooltip title={joinLink}>
-            <Typography variant="caption" maxWidth="75%" display="block" noWrap>
-              {joinLink}
-            </Typography>
-          </Tooltip>
-          <IconButton onClick={() => navigator.clipboard.writeText(joinLink)}>
-            <ContentCopy fontSize="small" />
-          </IconButton>
-        </Box>
+        {game.state === "new" && (
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Tooltip title={joinLink}>
+              <Typography
+                variant="caption"
+                maxWidth="75%"
+                display="block"
+                noWrap
+              >
+                {joinLink}
+              </Typography>
+            </Tooltip>
+            <IconButton onClick={() => navigator.clipboard.writeText(joinLink)}>
+              <ContentCopy fontSize="small" />
+            </IconButton>
+          </Box>
+        )}
         <Box>
           <Typography variant="h2">Players</Typography>
           <ul>

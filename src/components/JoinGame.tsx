@@ -1,7 +1,7 @@
 import { Box, Button, Input, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Game } from "../model/Game";
 import { onGameChange } from "../services/GameService";
@@ -56,11 +56,17 @@ const JoinGame = () => {
     return <Typography>Loading...</Typography>;
   }
 
+  if (!game) {
+    return <Typography>Game not found...</Typography>;
+  }
+
   const onSubmit = ({ message }: FormData) => {
-    if (game) {
-      createJoinRequest(game, player, message).catch(console.error);
-    }
+    createJoinRequest(game, player, message).catch(console.error);
   };
+
+  if (game.playerIds.includes(player.uid)) {
+    return <Navigate to={`/games/${game.id}`} />;
+  }
 
   return (
     <Box display="flex">
