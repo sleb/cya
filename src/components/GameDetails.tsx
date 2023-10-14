@@ -10,21 +10,18 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useHref, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import { Game } from "../model/Game";
 import { JoinRequest } from "../model/JoinRequest";
 import { onGameChange } from "../services/GameService";
 import {
   approveJoinRequest,
   deleteJoinRequest,
-  getJoinRequestsForApprover,
+  onGameJoinRequestChange,
 } from "../services/JoinRequestService";
-import { playerState } from "../state/PlayerState";
 
 type Params = { id: string };
 
 const GameDetails = () => {
-  const { uid } = useRecoilValue(playerState)!;
   const [requests, setRequests] = useState<JoinRequest[]>([]);
   const [game, setGame] = useState<Game | null>(null);
   const [loadingGame, setLoadingGame] = useState(true);
@@ -53,13 +50,14 @@ const GameDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    setLoadingRequests(true);
-    // TODO subscribe to updates
-    getJoinRequestsForApprover(uid).then((rs) => {
-      setRequests(rs);
-      setLoadingRequests(false);
-    });
-  }, [uid]);
+    if (game) {
+      setLoadingRequests(true);
+      onGameJoinRequestChange(game.id, (requests) => {
+        setRequests(requests);
+        setLoadingRequests(false);
+      });
+    }
+  }, [game]);
 
   if (loadingGame || loadingRequests) {
     return <Typography>Loading...</Typography>;
@@ -71,7 +69,7 @@ const GameDetails = () => {
         <Typography variant="h1">{game?.name}</Typography>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Tooltip title={joinLink}>
-            <Typography variant="caption" maxWidth={200} display="block" noWrap>
+            <Typography variant="caption" maxWidth="75%" display="block" noWrap>
               {joinLink}
             </Typography>
           </Tooltip>

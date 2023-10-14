@@ -82,10 +82,7 @@ export const onGamesChange = (
   cb: (games: Game[]) => void
 ): (() => void) => {
   const collectionRef = gamesRef();
-  const q = query(
-    collectionRef,
-    where("playerIds", "array-contains", userId)
-  ).withConverter(gameConverter);
+  const q = query(collectionRef, where("playerIds", "array-contains", userId));
   return onSnapshot(q, (querySnap) => {
     const games: Game[] = querySnap.docs.map((doc) => ({
       id: doc.id,
