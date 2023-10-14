@@ -1,9 +1,5 @@
 export interface JoinRequestData {
-  game: {
-    id: string;
-    name: string;
-  };
-  approverIds: string[];
+  gameId: string;
   requestor: {
     id: string;
     displayName: string;

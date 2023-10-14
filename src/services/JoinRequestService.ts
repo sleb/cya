@@ -9,7 +9,6 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  getDocs,
   getFirestore,
   onSnapshot,
   query,
@@ -58,9 +57,8 @@ export const createJoinRequest = (
 ): Promise<void> => {
   const docRef = joinRequestRef(id(game.id, player.uid));
   return setDoc(docRef, {
-    game: { id: game.id, name: game.name },
+    gameId: game.id,
     requestor: { id: player.uid, displayName: player.displayName, message },
-    approverIds: game.playerIds,
   });
 };
 
@@ -82,15 +80,6 @@ export const onJoinRequestChange = (
   });
 };
 
-export const getJoinRequestsForApprover = async (
-  uid: string
-): Promise<JoinRequest[]> => {
-  const collectionRef = joinRequestsRef();
-  const q = query(collectionRef, where("approverIds", "array-contains", uid));
-  const snap = await getDocs(q);
-  return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-};
-
 const getJoinRequest = async (id: string): Promise<JoinRequest | null> => {
   const docRef = joinRequestRef(id);
   const snap = await getDoc(docRef);
@@ -99,6 +88,25 @@ const getJoinRequest = async (id: string): Promise<JoinRequest | null> => {
   }
 
   return { id: snap.id, ...snap.data() };
+};
+
+export const onGameJoinRequestChange = (
+  gameId: string,
+  cb: (requests: JoinRequest[]) => void
+): (() => void) => {
+  const collectionRef = joinRequestsRef();
+  const q = query(collectionRef, where("gameId", "==", gameId));
+  return onSnapshot(
+    q,
+    (snap) => {
+      const requests: JoinRequest[] = snap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      cb(requests);
+    },
+    console.error
+  );
 };
 
 export const deleteJoinRequest = (id: string): Promise<void> => {
@@ -111,7 +119,7 @@ export const approveJoinRequest = async (id: string) => {
   if (request) {
     const db = getFirestore(app);
     runTransaction(db, async (t) => {
-      t.update(gameRef(request.game.id), {
+      t.update(gameRef(request.gameId), {
         playerIds: arrayUnion(request.requestor.id),
         players: arrayUnion({
           uid: request.requestor.id,
