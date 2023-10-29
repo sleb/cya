@@ -4,7 +4,6 @@ import {
   DocumentReference,
   DocumentSnapshot,
   SnapshotOptions,
-  addDoc,
   arrayUnion,
   collection,
   doc,
@@ -16,9 +15,9 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { app } from "../firebase";
-import { Card, Cards } from "../model/Card";
+import { httpsCallable } from "firebase/functions";
+import { app, functions } from "../firebase";
+import { Card } from "../model/Card";
 import { Game, GameData } from "../model/Game";
 import { Hand } from "../model/Hand";
 import { Player } from "../model/Player";
@@ -56,50 +55,24 @@ export const getGame = async (gameId: string): Promise<Game | undefined> => {
   }
 };
 
+const deleteGameFun = httpsCallable<{ gameId: string }, void>(
+  functions,
+  "deleteGame"
+);
 export const deleteGame = async (gameId: string): Promise<void> => {
-  const functions = getFunctions(app);
-  const deleteGameFun = httpsCallable<{ gameId: string }, void>(
-    functions,
-    "deleteGame"
-  );
   await deleteGameFun({ gameId });
 };
 
-const createGame = async (gameData: GameData): Promise<string> => {
-  const collectionRef = gamesRef();
-  return (await addDoc(collectionRef, gameData)).id;
-};
-
-export const newGame = (name: string, player: Player): Promise<string> => {
-  const deck = newDeck();
-  shuffle(deck);
-
-  return createGame({
-    name,
-    deck,
-    dateInSecondsFromEpoch: Date.now() / 1000,
-    playerIds: [player.uid],
-    players: [player],
-    discard: [],
-    hands: [],
-    state: "new",
-  });
-};
-
-const newDeck = (): Card[] => {
-  return Object.entries(Cards).flatMap(([k, v]) => {
-    if (k === "Gold" || k === "Silver") {
-      return new Array(5).fill(v);
-    }
-    return new Array(10).fill(v);
-  });
-};
-
-const shuffle = (deck: Card[]) => {
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
+const newGameFun = httpsCallable<
+  { gameName: string; player: Player },
+  { gameId: string }
+>(functions, "newGame");
+export const newGame = async (
+  gameName: string,
+  player: Player
+): Promise<string> => {
+  const result = await newGameFun({ gameName, player });
+  return result.data.gameId;
 };
 
 const deal = (deck: Card[], players: Player[]): Hand[] => {
@@ -125,15 +98,13 @@ export const startGame = (gameId: string): Promise<void> => {
   return runTransaction(getFirestore(app), async (t) => {
     const result = await t.get(docRef);
     if (result.exists()) {
-      const players = result.data().players;
+      const game = result.data();
+      const players = game.players;
 
-      const deck = newDeck();
-      shuffle(deck);
-
-      const hands = deal(deck, players);
+      const hands = deal(game.deck, players);
 
       t.update(docRef, {
-        deck,
+        deck: game.deck,
         hands,
         nextPlayer: players[0],
         state: "in-progress",
