@@ -7,7 +7,6 @@ import {
   addDoc,
   arrayUnion,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getFirestore,
@@ -17,6 +16,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "../firebase";
 import { Card, Cards } from "../model/Card";
 import { Game, GameData } from "../model/Game";
@@ -56,9 +56,13 @@ export const getGame = async (gameId: string): Promise<Game | undefined> => {
   }
 };
 
-export const deleteGame = (gameId: string): Promise<void> => {
-  const docRef = gameRef(gameId);
-  return deleteDoc(docRef);
+export const deleteGame = async (gameId: string): Promise<void> => {
+  const functions = getFunctions(app);
+  const deleteGameFun = httpsCallable<{ gameId: string }, void>(
+    functions,
+    "deleteGame"
+  );
+  await deleteGameFun({ gameId });
 };
 
 const createGame = async (gameData: GameData): Promise<string> => {
