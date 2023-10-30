@@ -10,7 +10,7 @@
 import { initializeApp } from "firebase-admin/app";
 import * as logger from "firebase-functions/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { deleteGameById, initGame } from "./games";
+import { beginGame, deleteGameById, initGame } from "./games";
 import { Player } from "./model/Player";
 
 initializeApp();
@@ -63,3 +63,21 @@ export const newGame = onCall<
     throw e;
   }
 });
+
+export const startGame = onCall<{ gameId: string }, Promise<void>>(
+  async (req) => {
+    const gameId = req.data.gameId;
+    if (nullOrEmpty(gameId)) {
+      throw new HttpsError("invalid-argument", "missing `gameId`");
+    }
+
+    logger.info(`request to start gameId: ${gameId}`);
+    try {
+      await beginGame(gameId);
+      logger.info(`started gameId: ${gameId}`);
+    } catch (e) {
+      logger.error(`error: ${JSON.stringify(e)}`);
+      throw e;
+    }
+  }
+);
