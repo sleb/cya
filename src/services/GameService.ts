@@ -4,14 +4,12 @@ import {
   DocumentReference,
   DocumentSnapshot,
   SnapshotOptions,
-  arrayUnion,
   collection,
   doc,
   getDoc,
   getFirestore,
   onSnapshot,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
@@ -107,7 +105,13 @@ export const onGameChange = (
   });
 };
 
-export const addPlayer = (gameId: string, playerId: string): Promise<void> => {
-  const docRef = gameRef(gameId);
-  return updateDoc(docRef, { playerIds: arrayUnion(playerId) });
+const addPlayerFun = httpsCallable<{ gameId: string; playerId: string }, void>(
+  functions,
+  "addPlayer"
+);
+export const addPlayer = async (
+  gameId: string,
+  playerId: string
+): Promise<void> => {
+  await addPlayerFun({ gameId, playerId });
 };

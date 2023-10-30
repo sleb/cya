@@ -1,4 +1,8 @@
-import { DocumentData, getFirestore } from "firebase-admin/firestore";
+import {
+  DocumentData,
+  FieldValue,
+  getFirestore,
+} from "firebase-admin/firestore";
 import { HttpsError } from "firebase-functions/v2/https";
 import { Card, Cards } from "./model/Card";
 import { GameData } from "./model/Game";
@@ -100,4 +104,13 @@ export const beginGame = async (gameId: string): Promise<void> => {
       });
     }
   });
+};
+
+export const addPlayerToGame = async (
+  gameId: string,
+  playerId: string
+): Promise<void> => {
+  const db = getFirestore();
+  const gameRef = db.doc(id(gameId)).withConverter(gameConverter);
+  await gameRef.update({ playerIds: FieldValue.arrayUnion(playerId) });
 };
