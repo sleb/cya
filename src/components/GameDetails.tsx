@@ -1,15 +1,13 @@
-import { ContentCopy } from "@mui/icons-material";
 import {
   Box,
   Button,
   ButtonGroup,
-  IconButton,
   Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useHref, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Game } from "../model/Game";
 import { JoinRequest } from "../model/JoinRequest";
 import { onGameChange } from "../services/GameService";
@@ -18,6 +16,7 @@ import {
   deleteJoinRequest,
   onGameJoinRequestChange,
 } from "../services/JoinRequestService";
+import CopyJoinGameLinkIcon from "./CopyJoinGameLinkIcon";
 import GameActionArea from "./GameActionArea";
 
 type Params = { id: string };
@@ -37,7 +36,6 @@ const GameDetails = () => {
   const handleIgnore = (id: string) => {
     deleteJoinRequest(id).catch(console.error);
   };
-  const joinLink = `${window.location.origin}${useHref("join")}`;
 
   useEffect(() => {
     setLoadingGame(true);
@@ -71,24 +69,10 @@ const GameDetails = () => {
   return (
     <Box>
       <Stack direction="column">
-        <Typography variant="h1">{game.name}</Typography>
-        {game.state === "new" && (
-          <Box display="flex" flexDirection="row" alignItems="center">
-            <Tooltip title={joinLink}>
-              <Typography
-                variant="caption"
-                maxWidth="75%"
-                display="block"
-                noWrap
-              >
-                {joinLink}
-              </Typography>
-            </Tooltip>
-            <IconButton onClick={() => navigator.clipboard.writeText(joinLink)}>
-              <ContentCopy fontSize="small" />
-            </IconButton>
-          </Box>
-        )}
+        <Stack direction="row" gap={2}>
+          <Typography variant="h1">{game.name}</Typography>
+          {game.state === "new" && <CopyJoinGameLinkIcon gameId={game.id} />}
+        </Stack>
         <Box>
           <Typography variant="h2">Players</Typography>
           <ul>

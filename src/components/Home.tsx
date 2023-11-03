@@ -24,7 +24,7 @@ const Home = () => {
         New Game
       </Button>
       <Button variant="contained" onClick={() => navigate("games")}>
-        Continue Game
+        My Games
       </Button>
     </Stack>
   );
