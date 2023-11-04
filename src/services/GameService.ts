@@ -5,7 +5,6 @@ import {
   DocumentSnapshot,
   SnapshotOptions,
   addDoc,
-  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -14,7 +13,6 @@ import {
   onSnapshot,
   query,
   runTransaction,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { app } from "../firebase";
@@ -155,17 +153,13 @@ export const onGamesChange = (
 
 export const onGameChange = (
   gameId: string,
-  cb: (game: Game) => void
+  cb: (game: Game | null) => void
 ): (() => void) => {
-  return onSnapshot(gameRef(gameId), (gameSnap) => {
-    if (gameSnap.exists()) {
-      const game: Game = { id: gameSnap.id, ...gameSnap.data() };
-      cb(game);
-    }
+  return onSnapshot(gameRef(gameId), async (gameSnap) => {
+    const gameData = await gameSnap.data();
+    const game: Game | null = gameData
+      ? { id: gameSnap.id, ...gameData }
+      : null;
+    cb(game);
   });
-};
-
-export const addPlayer = (gameId: string, playerId: string): Promise<void> => {
-  const docRef = gameRef(gameId);
-  return updateDoc(docRef, { playerIds: arrayUnion(playerId) });
 };

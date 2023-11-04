@@ -24,8 +24,8 @@ type Params = { id: string };
 const GameDetails = () => {
   const [requests, setRequests] = useState<JoinRequest[]>([]);
   const [game, setGame] = useState<Game | null>(null);
-  const [loadingGame, setLoadingGame] = useState(true);
-  const [loadingRequests, setLoadingRequests] = useState(true);
+  const [loadingGame, setLoadingGame] = useState(false);
+  const [loadingRequests, setLoadingRequests] = useState(false);
 
   const { id } = useParams<Params>();
 
@@ -41,7 +41,7 @@ const GameDetails = () => {
     setLoadingGame(true);
     if (id) {
       setLoadingGame(false);
-      return onGameChange(id, (g: Game) => {
+      return onGameChange(id, (g) => {
         setGame(g);
         setLoadingGame(false);
       });
@@ -63,7 +63,7 @@ const GameDetails = () => {
   }
 
   if (!game) {
-    return <Typography>Game not found...</Typography>;
+    return <Typography>Game `{id}` not found...</Typography>;
   }
 
   return (

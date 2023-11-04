@@ -20,7 +20,7 @@ import { app } from "../firebase";
 import { Game } from "../model/Game";
 import { JoinRequest, JoinRequestData } from "../model/JoinRequest";
 import { Player } from "../model/Player";
-import { gameRef } from "./GameService";
+import { gameRef, getGame } from "./GameService";
 
 const JOIN_REQUESTS = "join-requests";
 
@@ -118,15 +118,22 @@ export const approveJoinRequest = async (id: string) => {
   const request = await getJoinRequest(id);
   if (request) {
     const db = getFirestore(app);
-    runTransaction(db, async (t) => {
-      t.update(gameRef(request.gameId), {
-        playerIds: arrayUnion(request.requestor.id),
-        players: arrayUnion({
-          uid: request.requestor.id,
-          displayName: request.requestor.displayName,
-        }),
+    const ref = gameRef(request.gameId);
+    const game = await getGame(request.gameId);
+    if (game && game.state == "new") {
+      runTransaction(db, async (t) => {
+        t.update(ref, {
+          playerIds: arrayUnion(request.requestor.id),
+          players: arrayUnion({
+            uid: request.requestor.id,
+            displayName: request.requestor.displayName,
+          }),
+        });
+        t.delete(joinRequestRef(request.id));
       });
-      t.delete(joinRequestRef(request.id));
-    });
+    } else {
+      deleteJoinRequest(request.id);
+      throw new Error("game is missing or cannot be joined");
+    }
   }
 };
