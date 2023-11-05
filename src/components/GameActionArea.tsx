@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
+import { useMessages } from "../hooks/useMessages";
 import { Game } from "../model/Game";
 import { startGame } from "../services/GameService";
 import { playerState } from "../state/PlayerState";
@@ -8,8 +9,10 @@ type Props = { game: Game };
 
 const GameActionArea = ({ game }: Props) => {
   const { uid } = useRecoilValue(playerState)!;
+  const messages = useMessages();
+
   const handleStartGame = () => {
-    startGame(game.id).catch(console.error);
+    startGame(game.id).catch(messages.error);
   };
 
   if (game.state === "new") {

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useMessages } from "../hooks/useMessages";
 import { Game } from "../model/Game";
 import { onGameChange } from "../services/GameService";
 import {
@@ -25,6 +26,7 @@ const JoinGame = () => {
   const [gameLoading, setGameLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
   const [requested, setRequested] = useState(false);
+  const messages = useMessages();
 
   const { id } = useParams<Params>();
 
@@ -33,7 +35,7 @@ const JoinGame = () => {
   useEffect(() => {
     setGameLoading(true);
     if (id) {
-      return onGameChange(id, (g: Game) => {
+      return onGameChange(id, (g) => {
         setGame(g);
         setGameLoading(false);
       });
@@ -52,6 +54,12 @@ const JoinGame = () => {
     }
   }, [id, player]);
 
+  const onSubmit = ({ message }: FormData) => {
+    if (game) {
+      createJoinRequest(game, player, message).catch(messages.error);
+    }
+  };
+
   if (gameLoading || requestLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -59,10 +67,6 @@ const JoinGame = () => {
   if (!game) {
     return <Typography>Game not found...</Typography>;
   }
-
-  const onSubmit = ({ message }: FormData) => {
-    createJoinRequest(game, player, message).catch(console.error);
-  };
 
   if (game.playerIds.includes(player.uid)) {
     return <Navigate to={`/games/${game.id}`} />;
@@ -80,7 +84,7 @@ const JoinGame = () => {
             {...register("message", { required: true })}
           />
           <Button type="submit" variant="contained" disabled={requested}>
-            {requested ? "Already requested" : "Join this game"}
+            {requested ? "Requested" : "Join this game"}
           </Button>
         </form>
       </Stack>

@@ -2,20 +2,22 @@ import { Box, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import { useMessages } from "../hooks/useMessages";
 import { onUserChange } from "../services/AuthService";
 import { playerState } from "../state/PlayerState";
 
 const App = () => {
   const setPlayer = useSetRecoilState(playerState);
   const [loading, setLoading] = useState(true);
+  const messages = useMessages();
 
   useEffect(() => {
     setLoading(true);
     return onUserChange((player) => {
       setPlayer(player);
       setLoading(false);
-    });
-  }, [setPlayer]);
+    }, messages.error);
+  }, [messages.error, setPlayer]);
 
   if (loading) {
     return (

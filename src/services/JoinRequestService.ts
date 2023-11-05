@@ -50,16 +50,20 @@ const joinRequestsRef = (): CollectionReference<JoinRequestData> => {
   return collection(db, JOIN_REQUESTS).withConverter(requestConverter);
 };
 
-export const createJoinRequest = (
+export const createJoinRequest = async (
   game: Game,
   player: Player,
   message: string
 ): Promise<void> => {
-  const docRef = joinRequestRef(id(game.id, player.uid));
-  return setDoc(docRef, {
-    gameId: game.id,
-    requestor: { id: player.uid, displayName: player.displayName, message },
-  });
+  if (game.state == "new") {
+    const docRef = joinRequestRef(id(game.id, player.uid));
+    return setDoc(docRef, {
+      gameId: game.id,
+      requestor: { id: player.uid, displayName: player.displayName, message },
+    });
+  } else {
+    throw new Error("Game has already started");
+  }
 };
 
 export const onJoinRequestChange = (
@@ -96,17 +100,13 @@ export const onGameJoinRequestChange = (
 ): (() => void) => {
   const collectionRef = joinRequestsRef();
   const q = query(collectionRef, where("gameId", "==", gameId));
-  return onSnapshot(
-    q,
-    (snap) => {
-      const requests: JoinRequest[] = snap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      cb(requests);
-    },
-    console.error
-  );
+  return onSnapshot(q, (snap) => {
+    const requests: JoinRequest[] = snap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    cb(requests);
+  });
 };
 
 export const deleteJoinRequest = (id: string): Promise<void> => {

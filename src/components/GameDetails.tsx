@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useMessages } from "../hooks/useMessages";
 import { Game } from "../model/Game";
 import { JoinRequest } from "../model/JoinRequest";
 import { onGameChange } from "../services/GameService";
@@ -26,15 +27,16 @@ const GameDetails = () => {
   const [game, setGame] = useState<Game | null>(null);
   const [loadingGame, setLoadingGame] = useState(false);
   const [loadingRequests, setLoadingRequests] = useState(false);
+  const messages = useMessages();
 
   const { id } = useParams<Params>();
 
   const handleAllow = (id: string) => {
-    approveJoinRequest(id).catch(console.error);
+    approveJoinRequest(id).catch(messages.error);
   };
 
   const handleIgnore = (id: string) => {
-    deleteJoinRequest(id).catch(console.error);
+    deleteJoinRequest(id).catch(messages.error);
   };
 
   useEffect(() => {
@@ -71,7 +73,11 @@ const GameDetails = () => {
       <Stack direction="column">
         <Stack direction="row" gap={2}>
           <Typography variant="h1">{game.name}</Typography>
-          {game.state === "new" && <CopyJoinGameLinkIcon gameId={game.id} />}
+          {game.state === "new" && (
+            <Box>
+              <CopyJoinGameLinkIcon gameId={game.id} />
+            </Box>
+          )}
         </Stack>
         <Box>
           <Typography variant="h2">Players</Typography>

@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
+import { useMessages } from "../hooks/useMessages";
 import { signOutUser } from "../services/AuthService";
 import { playerState } from "../state/PlayerState";
 import Login from "./Login";
@@ -16,6 +17,7 @@ import Login from "./Login";
 const ProfileMenu = () => {
   const player = useRecoilValue(playerState);
   const [menuElement, setMenuElement] = useState<HTMLElement | null>(null);
+  const messages = useMessages();
 
   const handleMenuOpen = (element: HTMLElement) => {
     setMenuElement(element);
@@ -26,7 +28,7 @@ const ProfileMenu = () => {
   };
 
   const handleLogOut = () => {
-    signOutUser().catch(console.error);
+    signOutUser().catch(messages.error);
   };
 
   const initials = (name: string): string => {

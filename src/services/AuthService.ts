@@ -19,7 +19,8 @@ export const signOutUser = (): Promise<void> => {
 };
 
 export const onUserChange = (
-  cb: (player: Player | null) => void
+  cb: (player: Player | null) => void,
+  err: (e: Error) => void
 ): (() => void) => {
   return onAuthStateChanged(
     getAuth(app),
@@ -31,6 +32,6 @@ export const onUserChange = (
         cb(null);
       }
     },
-    console.error
+    err
   );
 };
