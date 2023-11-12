@@ -1,9 +1,9 @@
 import { DeleteForever } from "@mui/icons-material";
 import {
-  Box,
   Button,
   IconButton,
   Link,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -49,7 +49,7 @@ const GameList = () => {
   }
 
   return (
-    <Box>
+    <Stack gap={2}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -81,8 +81,10 @@ const GameList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button onClick={handleNewGame}>New Game</Button>
-    </Box>
+      <Button onClick={handleNewGame} variant="contained">
+        New Game
+      </Button>
+    </Stack>
   );
 };
 

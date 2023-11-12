@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import { Card, Cards } from "../model/Card";
-import { Game, GameData } from "../model/Game";
+import { Game, GameData, getHandForPlayer } from "../model/Game";
 import { Hand } from "../model/Hand";
 import { Player } from "../model/Player";
 
@@ -76,6 +76,8 @@ export const newGame = (name: string, player: Player): Promise<string> => {
     players: [player],
     discard: [],
     hands: [],
+    bases: [],
+    assets: [],
     state: "new",
   });
 };
@@ -133,6 +135,47 @@ export const startGame = (gameId: string): Promise<void> => {
         state: "in-progress",
       });
     }
+  });
+};
+
+export const discard = (
+  gameId: string,
+  playerId: string,
+  card: Card
+): Promise<void> => {
+  const docRef = gameRef(gameId);
+
+  return runTransaction(getFirestore(app), async (t) => {
+    const result = await t.get(docRef);
+    const gameData = result.data();
+    if (!gameData) {
+      throw new Error("game not found");
+    }
+
+    const { hands, discard, deck } = gameData;
+
+    const playerHand = getHandForPlayer(hands, playerId);
+    if (!playerHand) {
+      throw new Error("no hand for player");
+    }
+
+    const discardIndex = playerHand.cards.indexOf(card);
+    if (discardIndex < 0) {
+      throw new Error("player hand does not contain the discarded card");
+    }
+    playerHand.cards.splice(discardIndex, 1);
+    discard.push(card);
+
+    const newCard = deck.pop();
+    if (newCard) {
+      playerHand.cards.push(newCard);
+    }
+
+    t.update(docRef, {
+      deck,
+      hands,
+      discard,
+    });
   });
 };
 

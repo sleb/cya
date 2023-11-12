@@ -1,6 +1,7 @@
-import { Games, Home } from "@mui/icons-material";
+import { Add, Games, Home } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
+  Divider,
   IconButton,
   ListItemIcon,
   Menu,
@@ -50,6 +51,13 @@ const NavMenu = () => {
             <Games />
           </ListItemIcon>
           <Typography>Games</Typography>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={() => go("/games/new")}>
+          <ListItemIcon>
+            <Add />
+          </ListItemIcon>
+          <Typography>New Game</Typography>
         </MenuItem>
       </Menu>
     </>

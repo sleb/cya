@@ -11,18 +11,14 @@ const BaseLayout = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" height="100vh">
+    <Box display="flex" flexDirection="column" flexGrow={1}>
       <Outlet />
       <Snackbar
         open={Boolean(message)}
         autoHideDuration={6000}
         onClose={handleClose}
       >
-        <Alert
-          onClose={handleClose}
-          severity={message?.severity}
-          sx={{ width: "80%" }}
-        >
+        <Alert onClose={handleClose} severity={message?.severity}>
           {message?.message}
         </Alert>
       </Snackbar>

@@ -1,6 +1,5 @@
 import { Logout } from "@mui/icons-material";
 import {
-  Avatar,
   IconButton,
   ListItemIcon,
   Menu,
@@ -12,6 +11,7 @@ import { useRecoilValue } from "recoil";
 import { useMessages } from "../hooks/useMessages";
 import { signOutUser } from "../services/AuthService";
 import { playerState } from "../state/PlayerState";
+import InitialsAvatar from "./InitialsAvatar";
 import Login from "./Login";
 
 const ProfileMenu = () => {
@@ -31,14 +31,6 @@ const ProfileMenu = () => {
     signOutUser().catch(messages.error);
   };
 
-  const initials = (name: string): string => {
-    return name
-      .split(/\s+/)
-      .filter((w) => w.length !== 0)
-      .map((w) => w[0].toUpperCase())
-      .join("");
-  };
-
   if (!player) {
     return <Login />;
   }
@@ -46,7 +38,7 @@ const ProfileMenu = () => {
   return (
     <>
       <IconButton onClick={(e) => handleMenuOpen(e.currentTarget)}>
-        <Avatar>{initials(player.displayName)}</Avatar>
+        <InitialsAvatar name={player.displayName} />
       </IconButton>
       <Menu
         anchorEl={menuElement}

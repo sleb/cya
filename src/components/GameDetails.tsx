@@ -1,9 +1,12 @@
+import { Delete as DeleteIcon } from "@mui/icons-material";
 import {
   Box,
-  Button,
-  ButtonGroup,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   Stack,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -19,6 +22,7 @@ import {
 } from "../services/JoinRequestService";
 import CopyJoinGameLinkIcon from "./CopyJoinGameLinkIcon";
 import GameActionArea from "./GameActionArea";
+import InitialsAvatar from "./InitialsAvatar";
 
 type Params = { id: string };
 
@@ -79,26 +83,39 @@ const GameDetails = () => {
             </Box>
           )}
         </Stack>
+        <List>
+          {requests.map((r, i) => (
+            <ListItem
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => handleIgnore(r.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
+              key={i}
+            >
+              <ListItemText
+                secondary={`Message: "${r.requestor.message}"`}
+                onClick={() => handleAllow(r.id)}
+              >{`${r.requestor.displayName} wants to join.`}</ListItemText>
+            </ListItem>
+          ))}
+        </List>
         <Box>
           <Typography variant="h2">Players</Typography>
-          <ul>
+          <List>
             {game.players.map((p, i) => (
-              <li key={i}>{p.displayName}</li>
+              <ListItem key={i}>
+                <ListItemAvatar>
+                  <InitialsAvatar name={p.displayName} />
+                </ListItemAvatar>
+                <ListItemText>{p.displayName}</ListItemText>
+              </ListItem>
             ))}
-            {requests.map((r, i) => (
-              <li key={i}>
-                <Box display="flex" flexDirection="row">
-                  <Tooltip title={r.requestor.message}>
-                    <Typography>{`${r.requestor.displayName} wants to join.`}</Typography>
-                  </Tooltip>
-                  <ButtonGroup size="small" variant="contained">
-                    <Button onClick={() => handleAllow(r.id)}>Allow</Button>
-                    <Button onClick={() => handleIgnore(r.id)}>Ignore</Button>
-                  </ButtonGroup>
-                </Box>
-              </li>
-            ))}
-          </ul>
+          </List>
         </Box>
         <GameActionArea game={game} />
       </Stack>

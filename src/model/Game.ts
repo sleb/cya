@@ -1,3 +1,5 @@
+import { AssetStack } from "./Asset";
+import { Base } from "./Base";
 import { Card } from "./Card";
 import { Hand } from "./Hand";
 import { Player } from "./Player";
@@ -14,6 +16,13 @@ export interface GameData {
   playerIds: string[];
   players: Player[];
   hands: Hand[];
+  bases: Base[];
+  assets: AssetStack[];
   state: "new" | "in-progress" | "complete";
   nextPlayer?: Player;
 }
+
+export const getHandForPlayer = (
+  hands: Hand[],
+  playerId: string
+): Hand | null => hands.find((h) => h.playerId === playerId) || null;

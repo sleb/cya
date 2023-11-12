@@ -1,4 +1,4 @@
-import { Box, Button, Input } from "@mui/material";
+import { Box, Button, Input, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -23,8 +23,14 @@ const NewGame = () => {
   };
 
   return (
-    <Box margin={2}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      flexGrow={1}
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <Stack gap={2} direction="column">
         <Input
           type="text"
           {...register("name", { required: true })}
@@ -33,7 +39,7 @@ const NewGame = () => {
         <Button type="submit" variant="contained">
           Create
         </Button>
-      </form>
+      </Stack>
     </Box>
   );
 };

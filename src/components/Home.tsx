@@ -34,13 +34,7 @@ const Home = () => {
   const renderButtons = player ? renderMenu : renderLogin;
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      flexGrow={1}
-      justifyContent="center"
-      alignItems="center"
-    >
+    <Box display="flex" flexDirection="column" flexGrow={1}>
       {renderButtons}
     </Box>
   );
