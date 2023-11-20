@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { app } from "../firebase";
+import { AssetStack } from "../model/Asset";
 import { Card, Cards } from "../model/Card";
 import { Game, GameData, getHandForPlayer } from "../model/Game";
 import { Hand } from "../model/Hand";
@@ -99,7 +100,10 @@ const shuffle = (deck: Card[]) => {
 };
 
 const deal = (deck: Card[], players: Player[]): Hand[] => {
-  const hands: Hand[] = players.map((p) => ({ playerId: p.uid, cards: [] }));
+  const hands: Hand[] = players.map((player) => ({
+    player,
+    cards: [],
+  }));
   let cards = 0;
   while (cards < 4) {
     for (const hand of hands) {
@@ -120,17 +124,24 @@ export const startGame = (gameId: string): Promise<void> => {
 
   return runTransaction(getFirestore(app), async (t) => {
     const result = await t.get(docRef);
-    if (result.exists()) {
-      const players = result.data().players;
+    const gameData = result.data();
+    if (gameData) {
+      const players = gameData.players;
 
       const deck = newDeck();
       shuffle(deck);
 
       const hands = deal(deck, players);
 
+      const assets: AssetStack[] = players.map((player) => ({
+        player,
+        assets: [],
+      }));
+
       t.update(docRef, {
         deck,
         hands,
+        assets,
         nextPlayer: players[0],
         state: "in-progress",
       });
@@ -181,17 +192,22 @@ export const discard = (
 
 export const onGamesChange = (
   userId: string,
-  cb: (games: Game[]) => void
+  cb: (games: Game[]) => void,
+  errCb: (e: Error) => void
 ): (() => void) => {
   const collectionRef = gamesRef();
   const q = query(collectionRef, where("playerIds", "array-contains", userId));
-  return onSnapshot(q, (querySnap) => {
-    const games: Game[] = querySnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    cb(games);
-  });
+  return onSnapshot(
+    q,
+    (querySnap) => {
+      const games: Game[] = querySnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      cb(games);
+    },
+    errCb
+  );
 };
 
 export const onGameChange = (

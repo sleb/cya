@@ -1,11 +1,10 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { cardImage } from "../lib/card-image";
-import { Card, Cards } from "../model/Card";
+import { Card } from "../model/Card";
 
 type Props = { hand: Card[] };
 
 const HandState = ({ hand }: Props) => {
-  console.log(cardImage(Cards.BankAccount));
   return (
     <Stack gap={1}>
       <Typography variant="h5">Hand</Typography>

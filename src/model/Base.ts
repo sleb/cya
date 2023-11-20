@@ -1,4 +1,6 @@
+import { Player } from "./Player";
+
 export interface Base {
-  playerId: string;
+  player: Player;
   value: number;
 }

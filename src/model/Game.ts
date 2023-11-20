@@ -25,4 +25,4 @@ export interface GameData {
 export const getHandForPlayer = (
   hands: Hand[],
   playerId: string
-): Hand | null => hands.find((h) => h.playerId === playerId) || null;
+): Hand | null => hands.find((h) => h.player.uid === playerId) || null;

@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { useRecoilValue } from "recoil";
-import { Game } from "../model/Game";
+import { Game, getHandForPlayer } from "../model/Game";
 import { playerState } from "../state/PlayerState";
 import DeckState from "./DeckState";
 import DiscardState from "./DiscardState";
@@ -10,7 +10,7 @@ type Props = { game: Game };
 
 const CurrentGameState = ({ game }: Props) => {
   const player = useRecoilValue(playerState)!;
-  const playerHand = game.hands.find((h) => h.playerId === player.uid);
+  const playerHand = getHandForPlayer(game.hands, player.uid);
 
   if (!playerHand) {
     throw new Error("No hand for player");

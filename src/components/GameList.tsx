@@ -37,12 +37,20 @@ const GameList = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    return onGamesChange(uid, (games) => {
-      setGames(games);
+    const handleError = () => {
+      messages.error("Error getting games");
       setLoading(false);
-    });
-  }, [uid]);
+    };
+    setLoading(true);
+    return onGamesChange(
+      uid,
+      (games) => {
+        setGames(games);
+        setLoading(false);
+      },
+      handleError
+    );
+  }, [messages, uid]);
 
   if (loading) {
     return <Typography>Loading...</Typography>;

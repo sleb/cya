@@ -1,10 +1,11 @@
 import { Card } from "./Card";
+import { Player } from "./Player";
 
 export interface Asset {
   card: Card;
   value: number;
 }
 export interface AssetStack {
-  playerId: string;
+  player: Player;
   assets: Asset[];
 }
