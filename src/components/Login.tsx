@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
-import { useMessages } from "../hooks/useMessages";
+import { useContext } from "react";
+import { MessageContext } from "../contexts/MessageContext";
 import { signInUser } from "../services/AuthService";
 
 const Login = () => {
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const handleLogIn = () => {
-    signInUser().catch(messages.error);
+    signInUser().catch(error);
   };
 
   return (

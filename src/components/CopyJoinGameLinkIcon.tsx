@@ -1,17 +1,18 @@
 import { ContentCopy } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { useMessages } from "../hooks/useMessages";
+import { useContext } from "react";
+import { MessageContext } from "../contexts/MessageContext";
 
 type Props = { gameId: string };
 
 const CopyJoinGameLinkIcon = ({ gameId }: Props) => {
-  const messages = useMessages();
+  const { info } = useContext(MessageContext);
 
   const handleCopyClick = () => {
     const joinLink = `${window.location.origin}/games/${gameId}/join`;
     navigator.clipboard.writeText(joinLink);
 
-    messages.success("Copied join link to clipboard");
+    info("Copied join link to clipboard");
   };
 
   return (

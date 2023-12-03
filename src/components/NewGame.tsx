@@ -1,8 +1,9 @@
 import { Box, Button, Input, Stack } from "@mui/material";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { newGame } from "../services/GameService";
 import { playerState } from "../state/PlayerState";
 
@@ -14,12 +15,12 @@ const NewGame = () => {
   const player = useRecoilValue(playerState)!;
   const navigate = useNavigate();
   const { handleSubmit, register } = useForm<FormData>({ mode: "onSubmit" });
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const onSubmit = (data: FormData) => {
     newGame(data.name, player)
       .then((id) => navigate(`/games/${id}`))
-      .catch(messages.error);
+      .catch(error);
   };
 
   return (

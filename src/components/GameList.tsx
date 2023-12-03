@@ -12,10 +12,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { Game } from "../model/Game";
 import { deleteGame, onGamesChange } from "../services/GameService";
 import { playerState } from "../state/PlayerState";
@@ -26,10 +26,10 @@ const GameList = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const handleDelete = (id: string) => {
-    deleteGame(id).catch(messages.error);
+    deleteGame(id).catch(error);
   };
 
   const handleNewGame = () => {
@@ -37,10 +37,6 @@ const GameList = () => {
   };
 
   useEffect(() => {
-    const handleError = () => {
-      messages.error("Error getting games");
-      setLoading(false);
-    };
     setLoading(true);
     return onGamesChange(
       uid,
@@ -48,9 +44,12 @@ const GameList = () => {
         setGames(games);
         setLoading(false);
       },
-      handleError
+      (e) => {
+        error(e.message);
+        setLoading(false);
+      }
     );
-  }, [messages, uid]);
+  }, [uid, error]);
 
   if (loading) {
     return <Typography>Loading...</Typography>;

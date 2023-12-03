@@ -15,6 +15,7 @@ import GameList from "./components/GameList";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import JoinGame from "./components/JoinGame";
+import MessageProvider from "./components/MessageProvider";
 import NewGame from "./components/NewGame";
 
 const theme = createTheme({
@@ -75,7 +76,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <CssBaseline />
     <RecoilRoot>
       <ThemeProvider theme={theme}>
-        <RouterProvider router={routes} />
+        <MessageProvider>
+          <RouterProvider router={routes} />
+        </MessageProvider>
       </ThemeProvider>
     </RecoilRoot>
   </React.StrictMode>

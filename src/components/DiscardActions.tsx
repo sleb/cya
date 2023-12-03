@@ -1,8 +1,8 @@
 import { ArrowDropDown } from "@mui/icons-material";
 import { Button, ButtonGroup, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { Card } from "../model/Card";
 import { Hand } from "../model/Hand";
 import { discard } from "../services/GameService";
@@ -14,12 +14,12 @@ const DiscardActions = ({ gameId, hand }: Props) => {
   const { uid } = useRecoilValue(playerState)!;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [open, setOpen] = useState(false);
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
   const buttonGroupRef = useRef<HTMLDivElement>(null);
   const cards = [...new Set(hand.cards)];
 
   const handleDiscard = (c: Card) => {
-    discard(gameId, uid, c).catch(messages.error);
+    discard(gameId, uid, c).catch(error);
   };
 
   const buttons = cards.map((c, i) => (

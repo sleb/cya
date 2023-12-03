@@ -9,9 +9,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { Game } from "../model/Game";
 import { JoinRequest } from "../model/JoinRequest";
 import { onGameChange } from "../services/GameService";
@@ -31,16 +31,16 @@ const GameDetails = () => {
   const [game, setGame] = useState<Game | null>(null);
   const [loadingGame, setLoadingGame] = useState(false);
   const [loadingRequests, setLoadingRequests] = useState(false);
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const { id } = useParams<Params>();
 
   const handleAllow = (id: string) => {
-    approveJoinRequest(id).catch(messages.error);
+    approveJoinRequest(id).catch(error);
   };
 
   const handleIgnore = (id: string) => {
-    deleteJoinRequest(id).catch(messages.error);
+    deleteJoinRequest(id).catch(error);
   };
 
   useEffect(() => {

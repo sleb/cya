@@ -1,9 +1,9 @@
 import { Box, Button, Input, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { Game } from "../model/Game";
 import { onGameChange } from "../services/GameService";
 import {
@@ -26,7 +26,7 @@ const JoinGame = () => {
   const [gameLoading, setGameLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
   const [requested, setRequested] = useState(false);
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const { id } = useParams<Params>();
 
@@ -56,7 +56,7 @@ const JoinGame = () => {
 
   const onSubmit = ({ message }: FormData) => {
     if (game) {
-      createJoinRequest(game, player, message).catch(messages.error);
+      createJoinRequest(game, player, message).catch(error);
     }
   };
 

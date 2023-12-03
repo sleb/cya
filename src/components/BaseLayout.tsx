@@ -1,10 +1,10 @@
 import { Alert, Box, Snackbar } from "@mui/material";
+import { useContext } from "react";
 import { Outlet } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { messageState } from "../state/MessageState";
+import { MessageContext } from "../contexts/MessageContext";
 
 const BaseLayout = () => {
-  const [message, setMessage] = useRecoilState(messageState);
+  const { message, setMessage } = useContext(MessageContext);
 
   const handleClose = () => {
     setMessage(null);

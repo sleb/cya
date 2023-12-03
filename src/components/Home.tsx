@@ -1,17 +1,18 @@
 import { Box, Button, Stack } from "@mui/material";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useMessages } from "../hooks/useMessages";
+import { MessageContext } from "../contexts/MessageContext";
 import { signInUser } from "../services/AuthService";
 import { playerState } from "../state/PlayerState";
 
 const Home = () => {
   const player = useRecoilValue(playerState);
   const navigate = useNavigate();
-  const messages = useMessages();
+  const { error } = useContext(MessageContext);
 
   const handleLogin = () => {
-    signInUser().catch(messages.error);
+    signInUser().catch(error);
   };
 
   const renderLogin = (

@@ -6,19 +6,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { useMessages } from "../hooks/useMessages";
+import { useContext, useState } from "react";
+import { MessageContext } from "../contexts/MessageContext";
 import { startGame } from "../services/GameService";
 
 type Props = { gameId: string };
 const NewGameActionArea = ({ gameId }: Props) => {
   const [open, setOpen] = useState(false);
-  const messages = useMessages();
+  const { error, info } = useContext(MessageContext);
 
   const handleStartGame = () => {
     startGame(gameId)
-      .then(() => messages.success("Game started!"))
-      .catch(messages.error);
+      .then(() => info("Game started!"))
+      .catch(error);
   };
 
   return (
